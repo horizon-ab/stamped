@@ -14,10 +14,7 @@ console.log(key)
 console.log(mapId)
 
 type LOI = { id : number, name : string, location: google.maps.LatLngLiteral }
-
-const mapOptions = {
-
-}
+type POI = { id : number, locationId : number, name : string, description : string, location: google.maps.LatLngLiteral } // TODO: add photos component
 
 const locations: LOI[] = [
     {id: 1, name: "UCLA", location: { lat: 34.0722, lng: -118.4427}},
@@ -25,6 +22,10 @@ const locations: LOI[] = [
     {id: 3, name: "Hollywood", location: { lat: 34.0907, lng: -118.3266}},
     {id: 4, name: "Malibu", location: { lat: 34.0381, lng: -118.6923}},
     {id: 5, name: "Silver Lake", location: { lat: 34.0829, lng: -118.2733}}
+]
+
+const points: POI[] = [
+    {id: 1, locationId: 1, name: "Pauley Pavilion", description: "Code for a hackathon!", location: {lat: 34.070211, lng: -118.446775}}
 ]
 
 const MapDisplay = () => {
@@ -61,7 +62,8 @@ const MapDisplay = () => {
                     streetViewControl={false}
                     fullscreenControl={false}
                 >
-                    <LOIMarkers />
+                    <LOIMarkers currentLocationId={currentLocationId}/>
+                    <POIMarkers />
                 </Map>
             </APIProvider>
             <div className='absolute top-4 right-4'>
@@ -85,17 +87,49 @@ function LocationDisplay(props: {locationName: string}) {
 }
 
 
-function LOIMarkers() {
+function LOIMarkers(props: {currentLocationId: number}) {
     return (
         <>
             {locations.map( (loi : LOI) => (
-                <LOIMarker key={loi.id} loi={loi} />
+                <LOIMarker key={loi.id} loi={loi} transparent={loi.id == props.currentLocationId ? true : false} />
             ))}
         </>
     )
 }
 
-function LOIMarker(props: {loi: LOI}) {
+function LOIMarker(props: {loi: LOI, transparent: boolean}) {
+    const [markerRef, marker] = useAdvancedMarkerRef();
+
+    return (
+        <AdvancedMarker
+            key={props.loi.id}
+            ref={markerRef}
+            position={props.loi.location}
+        >
+            <Circle 
+                radius={1100}
+                center={props.loi.location}
+                strokeColor={'#0c4cb3'}
+                strokeOpacity={1}
+                strokeWeight={3}
+                fillColor={'#3b82f6'}
+                fillOpacity={props.transparent ? 0 : 0.2}
+            / >
+        </AdvancedMarker>
+    )
+}
+
+function POIMarkers() {
+    return (
+        <>
+            {points.map((poi : POI) => (
+                <POIMarker key={poi.locationId + 0.1 * poi.id} poi={poi} />
+            ))}
+        </>
+    )
+}
+
+function POIMarker(props: {poi: POI}) {
     const [markerRef, marker] = useAdvancedMarkerRef();
     const [infoWindowShown, setInfoWindowShown] = useState(false);
 
@@ -106,36 +140,34 @@ function LOIMarker(props: {loi: LOI}) {
 
     const handleClose = useCallback(() => setInfoWindowShown(false), []);
 
-    return (
+    return(
         <AdvancedMarker
-            key={props.loi.id}
+            onClick = {handleMarkerClick}
+            key={props.poi.id}
             ref={markerRef}
-            position={props.loi.location}
-            onClick={handleMarkerClick}
+            position={props.poi.location}
         >
-            {/* <Pin background={'#00FF00'} glyphColor={'#000'} borderColor={'#000'} />
+            <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
             {infoWindowShown && (
                 <InfoWindow anchor={marker} onClose={handleClose}>
-                    <div className='text-black'>List LOIs and descriptions/photos/other people stuff</div>
-                </InfoWindow>
-            )} */}
-            <Circle 
-                onClick = {handleMarkerClick} // TODO: scuffed, fix later
-                radius={1100}
-                center={props.loi.location}
-                strokeColor={'#0c4cb3'}
-                strokeOpacity={1}
-                strokeWeight={3}
-                fillColor={'#3b82f6'}
-                fillOpacity={0.2}
-            / >
-            {infoWindowShown && (
-                <InfoWindow anchor={marker} onClose={handleClose}>
-                    <div className='text-black'>List LOIs and descriptions/photos/other people stuff</div>
+                    <POIDisplay poi={props.poi} />
                 </InfoWindow>
             )}
         </AdvancedMarker>
     )
 }
 
-export default MapDisplay
+function POIDisplay(props: {poi: POI}) {
+
+    // TODO: add photos to first flex-row div
+    return(
+        <div className='flex flex-col text-black'>
+            <div className='flex flex-row'></div>
+            <div className=''>
+                {props.poi.description}
+            </div>
+        </div>
+    )
+}
+
+export default MapDisplay;
