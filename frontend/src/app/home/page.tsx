@@ -1,14 +1,24 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
-import dotenv from 'dotenv'
+import { useRouter } from "next/navigation";
 
-// Responsive static map: width adapts to device, maxes at 360px for modern phones
+// Responsive static map helper (same as before)
+function getStaticMapUrl(
+  lat: number,
+  lng: number,
+  size = "340x440"
+) {
+  const zoom = 13;
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
+  return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=${zoom}&size=${size}&scale=2&maptype=roadmap&markers=color:red%7Clabel:U%7C${lat},${lng}&key=${apiKey}`;
+}
+
 function useCurrentPosition() {
-  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [position, setPosition] = React.useState<{ lat: number; lng: number } | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!navigator.geolocation) {
       setError("Geolocation not supported.");
       setPosition({ lat: 34.06999972, lng: -118.439789907 }); // UCLA fallback
@@ -26,33 +36,36 @@ function useCurrentPosition() {
   return { position, error };
 }
 
-function getStaticMapUrl(
-  lat: number,
-  lng: number,
-  radiusMiles: number = 6,
-  size = "340x440"
-) {
-  const zoom = 13;
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY 
-  return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=${zoom}&size=${size}&scale=2&maptype=roadmap&markers=color:red%7Clabel:U%7C${lat},${lng}&key=${apiKey}`;
-}
-
 const Home: React.FC = () => {
   const { position, error } = useCurrentPosition();
+  const [isExpanding, setIsExpanding] = useState(false);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
   // Responsive: use window width (max 360px), keep 5:6 aspect ratio
   const [mapWidth, setMapWidth] = useState(320);
-
-  useEffect(() => {
+  React.useEffect(() => {
     function handleResize() {
       const w = Math.min(window.innerWidth - 32, 360); // 16px padding each side
-      setMapWidth(w > 240 ? w : 240); // never below 240px
+      setMapWidth(w > 240 ? w : 240);
     }
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
   const mapHeight = Math.round((mapWidth / 5) * 6);
+
+  // Handler for map click
+  const handleMapClick = () => {
+    setIsExpanding(true);
+    // Wait for the grow animation to finish, then route to /map
+    setTimeout(() => {
+      router.push("/map");
+    }, 600); // match animation duration
+  };
+
+  // Use a larger map image during expansion to prevent blurriness (max 640x640 for free tier)
+  const expandedMapSize = "640x640";
 
   return (
     <main className="flex flex-col items-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 px-2 py-8 animate-fadeIn">
@@ -73,21 +86,32 @@ const Home: React.FC = () => {
       <section className="w-full max-w-xs flex flex-col items-center relative">
         {/* Map Image with Current Location */}
         <div
-          className="relative mb-6 rounded-xl overflow-hidden shadow-xl bg-white"
+          ref={mapRef}
+          className={`relative mb-6 rounded-xl overflow-hidden shadow-xl bg-white cursor-pointer transition-all duration-500 
+            ${isExpanding ? "z-50 fixed left-0 top-0 w-screen h-screen m-0 rounded-none growMap" : ""}`}
           style={{
-            width: mapWidth,
-            height: mapHeight,
-            transition: "width 0.3s, height 0.3s",
+            width: isExpanding ? "100vw" : mapWidth,
+            height: isExpanding ? "100vh" : mapHeight,
+            maxWidth: isExpanding ? "100vw" : undefined,
+            maxHeight: isExpanding ? "100vh" : undefined,
+            transition: "all 0.6s cubic-bezier(0.4, 0.2, 0.2, 1)",
           }}
+          onClick={handleMapClick}
+          aria-label="Expand map"
+          title="Tap to open big map"
         >
           {position ? (
             <img
-              src={getStaticMapUrl(position.lat, position.lng, 6, `${Math.round(mapWidth)}x${mapHeight}`)}
+              src={getStaticMapUrl(
+                position.lat,
+                position.lng,
+                isExpanding ? expandedMapSize : `${Math.round(mapWidth)}x${mapHeight}`
+              )}
               alt="Map centered on your location"
               className="w-full h-full object-cover animate-fadeInSlow"
               draggable={false}
-              width={mapWidth}
-              height={mapHeight}
+              width={isExpanding ? 640 : mapWidth}
+              height={isExpanding ? 640 : mapHeight}
               style={{ transition: "opacity 0.5s" }}
               loading="lazy"
             />
@@ -102,6 +126,11 @@ const Home: React.FC = () => {
               <span className="absolute left-[65%] top-[40%] z-10 text-xl animate-pinBounce">📍</span>
               <span className="absolute left-[25%] top-[60%] z-10 text-xl animate-pinBounce2">📍</span>
               <span className="absolute left-[50%] top-[25%] z-10 text-xl animate-pinBounce3">📍</span>
+              {!isExpanding && (
+                <span className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/80 px-3 py-1 rounded-full text-xs font-medium text-indigo-700 shadow animate-fadeInUp pointer-events-none">
+                  Tap to expand
+                </span>
+              )}
             </>
           )}
         </div>
@@ -122,13 +151,6 @@ const Home: React.FC = () => {
           <li className="flex gap-2 items-center"><span className="animate-popIn3">🏅</span>Earn unique stamps for each location</li>
         </ul>
 
-        <Link
-          href="/map"
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg shadow text-center transition-all duration-200 active:scale-95 animate-fadeInUp"
-          style={{ maxWidth: 360 }}
-        >
-          Open Map & Collect Stamps
-        </Link>
       </section>
 
       {/* Footer */}
@@ -196,6 +218,27 @@ const Home: React.FC = () => {
         .animate-pinBounce3 { animation: pinBounce3 1.1s both 0.4s; }
         .animate-heartBeat { animation: heartBeat 1.5s infinite; }
         .animate-shakeX { animation: shakeX 0.4s both; }
+        .growMap {
+          animation: growMapAnim 0.6s cubic-bezier(0.4,0.2,0.2,1) both;
+        }
+        @keyframes growMapAnim {
+          0% { 
+            width: ${mapWidth}px;
+            height: ${mapHeight}px;
+            left: 50%;
+            top: 130px;
+            transform: translate(-50%, 0);
+            border-radius: 1rem;
+          }
+          100% { 
+            width: 100vw;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            transform: none;
+            border-radius: 0;
+          }
+        }
       `}</style>
     </main>
   );
