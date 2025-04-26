@@ -35,7 +35,12 @@ const MapDisplay = () => {
 
     const checkLocation = useCallback((ev: MapCameraChangedEvent) => {
         for (var loi of locations) {
-            if (Math.sqrt(Math.pow((loi as unknown as LOI).location.lat - ev.detail.center.lat, 2) + Math.pow((loi as unknown as LOI).location.lng - ev.detail.center.lng, 2)) < 0.01100) {
+            if (Math.sqrt(
+                Math.pow((loi as unknown as LOI).location.lat - ev.detail.center.lat, 2) + 
+                Math.pow((loi as unknown as LOI).location.lng - ev.detail.center.lng, 2)) 
+                < 0.01100 &&
+                ev.detail.zoom > 14
+                ) {
                 setShowLocationDisplay(true);
                 setCurrentLocation((loi as unknown as LOI).name);
                 setCurrentLocationId((loi as unknown as LOI).id)
@@ -112,7 +117,7 @@ function LOIMarker(props: {loi: LOI, transparent: boolean}) {
                 strokeColor={'#0c4cb3'}
                 strokeOpacity={1}
                 strokeWeight={3}
-                fillColor={'#3b82f6'}
+                fillColor={'#808080'}
                 fillOpacity={props.transparent ? 0 : 0.2}
             / >
         </AdvancedMarker>
