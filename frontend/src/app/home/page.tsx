@@ -83,7 +83,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Hero Section */}
-      <section className="w-full max-w-xs flex flex-col items-center relative">
+      <section className="w-full max-w-xs flex flex-col items-center relative mb-20">
         {/* Map Image with Current Location */}
         <div
           ref={mapRef}
