@@ -1,3 +1,4 @@
+'use client'
 import { AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 import MapDisplay from "./map_display";
 
