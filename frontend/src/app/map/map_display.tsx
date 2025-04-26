@@ -3,7 +3,18 @@
 import {APIProvider, Map, MapCameraChangedEvent, AdvancedMarker, Pin, useAdvancedMarkerRef, InfoWindow, MapControl, ControlPosition } from '@vis.gl/react-google-maps';
 import dotenv from 'dotenv';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Circle }from './circle'
+import Image from 'next/image'
+import { Circle } from './circle'
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+  } from "@/components/ui/carousel"
+import { MdHeight } from 'react-icons/md';
+import { Button } from '@/components/ui/button';
+  
 
 // TODO: create utils folder with functions, import and fetch LOIs from the database
 
@@ -26,6 +37,15 @@ const locations: LOI[] = [
 
 const points: POI[] = [
     {id: 1, locationId: 1, name: "Pauley Pavilion", description: "Code for a hackathon!", location: {lat: 34.070211, lng: -118.446775}}
+]
+
+const images: string[] = [
+    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
+    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
+    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
+    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
+    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
+    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
 ]
 
 const MapDisplay = () => {
@@ -154,7 +174,11 @@ function POIMarker(props: {poi: POI}) {
         >
             <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
             {infoWindowShown && (
-                <InfoWindow anchor={marker} onClose={handleClose}>
+                <InfoWindow
+                    style={{ height: '200px', width: '200px' }}
+                    anchor={marker}
+                    onClose={handleClose}
+                >
                     <POIDisplay poi={props.poi} />
                 </InfoWindow>
             )}
@@ -164,13 +188,37 @@ function POIMarker(props: {poi: POI}) {
 
 function POIDisplay(props: {poi: POI}) {
 
-    // TODO: add photos to first flex-row div
     return(
-        <div className='flex flex-col text-black'>
-            <div className='flex flex-row'></div>
-            <div className=''>
-                {props.poi.description}
-            </div>
+        <div className='flex flex-col text-black gap-4'>
+            <div className='font-bold text-xl'>{props.poi.name}</div>
+            <Carousel
+                opts={{
+                    align: "center",
+                    loop: true,
+                    dragFree: true
+                  }}
+                
+            >
+                <CarouselContent>
+                    {images.map((image) => (
+                        <CarouselItem key={image} className='overflow-hidden basis-1/2'>
+                            <div className="relative w-full h-20">
+                                <Image
+                                    src={image}
+                                    alt={image}
+                                    fill
+                                    style={{ objectFit: 'cover' }}
+                                    className="rounded-lg"
+                                />
+                            </div>
+                        </CarouselItem>
+                    ))
+
+                    }
+                </CarouselContent>
+            </Carousel>
+            <div className='text-center'>{props.poi.description}</div>
+            <Button>Upload Image</Button>
         </div>
     )
 }
