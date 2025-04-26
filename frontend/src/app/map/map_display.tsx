@@ -3,7 +3,20 @@
 import {APIProvider, Map, MapCameraChangedEvent, AdvancedMarker, Pin, useAdvancedMarkerRef, InfoWindow, MapControl, ControlPosition } from '@vis.gl/react-google-maps';
 import dotenv from 'dotenv';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Circle }from './circle'
+import Image from 'next/image'
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+  } from "@/components/ui/carousel"
+import { MdHeight } from 'react-icons/md';
+import { Button } from '@/components/ui/button';
+
+import { Circle } from './circle'
+import Upload from './upload'
+  
 
 // TODO: create utils folder with functions, import and fetch LOIs from the database
 
@@ -13,8 +26,8 @@ const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAP_ID;
 console.log(key)
 console.log(mapId)
 
-type LOI = { id : number, name : string, location: google.maps.LatLngLiteral }
-type POI = { id : number, locationId : number, name : string, description : string, location: google.maps.LatLngLiteral } // TODO: add photos component
+export type LOI = { id : number, name : string, location: google.maps.LatLngLiteral }
+export type POI = { id : number, locationId : number, name : string, description : string, location: google.maps.LatLngLiteral } // TODO: add photos component
 
 const locations: LOI[] = [
     {id: 1, name: "UCLA", location: { lat: 34.0722, lng: -118.4427}},
@@ -26,6 +39,15 @@ const locations: LOI[] = [
 
 const points: POI[] = [
     {id: 1, locationId: 1, name: "Pauley Pavilion", description: "Code for a hackathon!", location: {lat: 34.070211, lng: -118.446775}}
+]
+
+const images: string[] = [
+    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
+    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
+    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
+    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
+    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
+    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
 ]
 
 const MapDisplay = () => {
@@ -154,7 +176,11 @@ function POIMarker(props: {poi: POI}) {
         >
             <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
             {infoWindowShown && (
-                <InfoWindow anchor={marker} onClose={handleClose}>
+                <InfoWindow
+                    style={{ height: '230px', width: '220px' }}
+                    anchor={marker}
+                    onClose={handleClose}
+                >
                     <POIDisplay poi={props.poi} />
                 </InfoWindow>
             )}
@@ -164,13 +190,37 @@ function POIMarker(props: {poi: POI}) {
 
 function POIDisplay(props: {poi: POI}) {
 
-    // TODO: add photos to first flex-row div
     return(
-        <div className='flex flex-col text-black'>
-            <div className='flex flex-row'></div>
-            <div className=''>
-                {props.poi.description}
-            </div>
+        <div className='flex flex-col text-black gap-4'>
+            <div className='font-bold text-xl'>{props.poi.name}</div>
+            <Carousel
+                opts={{
+                    align: "center",
+                    loop: true,
+                    dragFree: true
+                  }}
+                
+            >
+                <CarouselContent>
+                    {images.map((image, index) => (
+                        <CarouselItem key={index} className='overflow-hidden basis-1/2'>
+                            <div className="relative w-full h-20">
+                                <Image
+                                    src={image}
+                                    alt={image}
+                                    fill
+                                    style={{ objectFit: 'cover' }}
+                                    className="rounded-lg"
+                                />
+                            </div>
+                        </CarouselItem>
+                    ))
+
+                    }
+                </CarouselContent>
+            </Carousel>
+            <div className='text-center'>{props.poi.description}</div>
+            <Upload poi={props.poi} />
         </div>
     )
 }

@@ -7,3 +7,4 @@ export default function Map() {
             <MapDisplay />
         </div>
     );
+}
