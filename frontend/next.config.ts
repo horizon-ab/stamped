@@ -8,6 +8,12 @@ module.exports = {
   images: {
     domains: ['drive.google.com'],
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '5mb',
+    },
+  },
+
 }
 
 export default nextConfig;

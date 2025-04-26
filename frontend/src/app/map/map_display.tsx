@@ -4,7 +4,6 @@ import {APIProvider, Map, MapCameraChangedEvent, AdvancedMarker, Pin, useAdvance
 import dotenv from 'dotenv';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image'
-import { Circle } from './circle'
 import {
     Carousel,
     CarouselContent,
@@ -14,6 +13,9 @@ import {
   } from "@/components/ui/carousel"
 import { MdHeight } from 'react-icons/md';
 import { Button } from '@/components/ui/button';
+
+import { Circle } from './circle'
+import Upload from './upload'
   
 
 // TODO: create utils folder with functions, import and fetch LOIs from the database
@@ -24,8 +26,8 @@ const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAP_ID;
 console.log(key)
 console.log(mapId)
 
-type LOI = { id : number, name : string, location: google.maps.LatLngLiteral }
-type POI = { id : number, locationId : number, name : string, description : string, location: google.maps.LatLngLiteral } // TODO: add photos component
+export type LOI = { id : number, name : string, location: google.maps.LatLngLiteral }
+export type POI = { id : number, locationId : number, name : string, description : string, location: google.maps.LatLngLiteral } // TODO: add photos component
 
 const locations: LOI[] = [
     {id: 1, name: "UCLA", location: { lat: 34.0722, lng: -118.4427}},
@@ -200,8 +202,8 @@ function POIDisplay(props: {poi: POI}) {
                 
             >
                 <CarouselContent>
-                    {images.map((image) => (
-                        <CarouselItem key={image} className='overflow-hidden basis-1/2'>
+                    {images.map((image, index) => (
+                        <CarouselItem key={index} className='overflow-hidden basis-1/2'>
                             <div className="relative w-full h-20">
                                 <Image
                                     src={image}
@@ -218,7 +220,7 @@ function POIDisplay(props: {poi: POI}) {
                 </CarouselContent>
             </Carousel>
             <div className='text-center'>{props.poi.description}</div>
-            <Button>Upload Image</Button>
+            <Upload poi={props.poi} />
         </div>
     )
 }
