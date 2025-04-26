@@ -40,7 +40,7 @@ function getStaticMapUrl(
   // We'll use zoom=13 for ~5-6 miles radius at phone resolution
   const zoom = 13;
 
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyDoK3owtqGo-O4apQg40khuCaJiePFvZHA";
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY 
   // Add a red pin for current location (&markers)
   console.log(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
   return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=${zoom}&size=${size}&maptype=roadmap&markers=color:red%7Clabel:U%7C${lat},${lng}&key=${apiKey}`;
