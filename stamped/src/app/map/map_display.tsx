@@ -3,8 +3,9 @@
 import {APIProvider, Map, MapCameraChangedEvent, AdvancedMarker, Pin, useAdvancedMarkerRef, InfoWindow } from '@vis.gl/react-google-maps';
 import dotenv from 'dotenv';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { Circle }from './circle'
 
-// TODO: create utils folder with functions, import and fetch POIs from the database
+// TODO: create utils folder with functions, import and fetch LOIs from the database
 
 dotenv.config();
 const key = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
@@ -12,8 +13,10 @@ const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAP_ID;
 console.log(key)
 console.log(mapId)
 
-type POI = { id : number, name : string, location: google.maps.LatLngLiteral }
-const locations: POI[] = [
+type LOI = { id : number, name : string, location: google.maps.LatLngLiteral }
+
+
+const locations: LOI[] = [
     {id: 1, name: "UCLA", location: { lat: 34.0722, lng: -118.4427}},
     {id: 2, name: "Santa Monica", location: { lat: 34.0119, lng: -118.4916}},
     {id: 3, name: "Hollywood", location: { lat: 34.0907, lng: -118.3266}},
@@ -34,7 +37,7 @@ const MapDisplay = () => {
                   console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
                 }
             >
-                <POIMarkers locations={locations}/>
+                <LOIMarkers locations={locations}/>
             </Map>
         </APIProvider>
     )
@@ -43,17 +46,17 @@ const MapDisplay = () => {
 // 34.0549° N, 118.2426° W
 
 
-function POIMarkers(props: {locations: POI[]}) {
+function LOIMarkers(props: {locations: LOI[]}) {
     return (
         <>
-            {props.locations.map( (poi : POI) => (
-                <POIMarker poi={poi} />
+            {props.locations.map( (loi : LOI) => (
+                <LOIMarker loi={loi} />
             ))}
         </>
     )
 }
 
-function POIMarker(props: {poi: POI}) {
+function LOIMarker(props: {loi: LOI}) {
     const [markerRef, marker] = useAdvancedMarkerRef();
     const [infoWindowShown, setInfoWindowShown] = useState(false);
 
@@ -66,15 +69,30 @@ function POIMarker(props: {poi: POI}) {
 
     return (
         <AdvancedMarker
-            key={props.poi.id}
+            key={props.loi.id}
             ref={markerRef}
-            position={props.poi.location}
+            position={props.loi.location}
             onClick={handleMarkerClick}
         >
-            <Pin background={'#00FF00'} glyphColor={'#000'} borderColor={'#000'} />
+            {/* <Pin background={'#00FF00'} glyphColor={'#000'} borderColor={'#000'} />
             {infoWindowShown && (
                 <InfoWindow anchor={marker} onClose={handleClose}>
-                    <div className='text-black'>List POIs and descriptions/photos/other people stuff</div>
+                    <div className='text-black'>List LOIs and descriptions/photos/other people stuff</div>
+                </InfoWindow>
+            )} */}
+            <Circle 
+                onClick = {handleMarkerClick} // TODO: scuffed, fix later
+                radius={1100}
+                center={props.loi.location}
+                strokeColor={'#0c4cb3'}
+                strokeOpacity={1}
+                strokeWeight={3}
+                fillColor={'#3b82f6'}
+                fillOpacity={0.2}
+            / >
+            {infoWindowShown && (
+                <InfoWindow anchor={marker} onClose={handleClose}>
+                    <div className='text-black'>List LOIs and descriptions/photos/other people stuff</div>
                 </InfoWindow>
             )}
         </AdvancedMarker>
