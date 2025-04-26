@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google/genai": "^0.10.0",
     "@types/express": "^5.0.1",
     "exif-parser": "^0.1.12",
     "exifr": "^7.1.3",
