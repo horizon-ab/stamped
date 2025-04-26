@@ -1,6 +1,6 @@
 'use client'
 
-import {APIProvider, Map, MapCameraChangedEvent, AdvancedMarker, Pin, useAdvancedMarkerRef, InfoWindow } from '@vis.gl/react-google-maps';
+import {APIProvider, Map, MapCameraChangedEvent, AdvancedMarker, Pin, useAdvancedMarkerRef, InfoWindow, MapControl, ControlPosition } from '@vis.gl/react-google-maps';
 import dotenv from 'dotenv';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Circle }from './circle'
@@ -15,6 +15,9 @@ console.log(mapId)
 
 type LOI = { id : number, name : string, location: google.maps.LatLngLiteral }
 
+const mapOptions = {
+
+}
 
 const locations: LOI[] = [
     {id: 1, name: "UCLA", location: { lat: 34.0722, lng: -118.4427}},
@@ -25,32 +28,68 @@ const locations: LOI[] = [
 ]
 
 const MapDisplay = () => {
+    const [showLocationDisplay, setShowLocationDisplay] = useState(false);
+    const [currentLocation, setCurrentLocation] = useState('');
+    const [currentLocationId, setCurrentLocationId] = useState(-1);
+
+    const checkLocation = useCallback((ev: MapCameraChangedEvent) => {
+        for (var loi of locations) {
+            if (Math.sqrt(Math.pow((loi as unknown as LOI).location.lat - ev.detail.center.lat, 2) + Math.pow((loi as unknown as LOI).location.lng - ev.detail.center.lng, 2)) < 0.01100) {
+                setShowLocationDisplay(true);
+                setCurrentLocation((loi as unknown as LOI).name);
+                setCurrentLocationId((loi as unknown as LOI).id)
+                console.log(showLocationDisplay);
+                return;
+            }
+        }
+        setShowLocationDisplay(false);
+        setCurrentLocation('');
+        setCurrentLocationId(-1)
+    }, [])
+
+    // TODO: LocationDisplay needs to update after one of its props changes
 
     return(
-        <APIProvider apiKey={key ?? ''} onLoad={() => console.log('Maps API has loaded.')}>
-            <Map
-                style={{ height: '100vh', width: '100%' }}
-                defaultZoom={10}
-                defaultCenter={ { lat: 34.0549, lng: -118.2426 } }
-                mapId={mapId ?? ''}
-                onCameraChanged={ (ev: MapCameraChangedEvent) =>
-                  console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
-                }
-            >
-                <LOIMarkers locations={locations}/>
-            </Map>
-        </APIProvider>
+        <div className='relative w-full'>
+            <APIProvider apiKey={key ?? ''} onLoad={() => console.log('Maps API has loaded.')}>
+                <Map
+                    style={{ height: '100vh', width: '100%' }}
+                    defaultZoom={10}
+                    defaultCenter={ { lat: 34.0549, lng: -118.2426 } }
+                    mapId={mapId ?? ''}
+                    onCameraChanged={ checkLocation }
+                    streetViewControl={false}
+                    fullscreenControl={false}
+                >
+                    <LOIMarkers />
+                </Map>
+            </APIProvider>
+            <div className='absolute top-4 right-4'>
+                {showLocationDisplay && <LocationDisplay locationName={currentLocation} />} 
+            </div>
+        </div>
+        
     )
 }
 
-// 34.0549° N, 118.2426° W
+
+// TODO: make it so that it fetches from the DB using location id instead
+function LocationDisplay(props: {locationName: string}) {
+    return (
+        <div className='text-black bg-white border border-violet-400 rounded-lg p-10'>
+            <div>Location: {props.locationName}</div>
+            <div>Stamps: 0/11</div>
+            <div className='text-xl text-center'>11%</div>
+        </div>
+    )
+}
 
 
-function LOIMarkers(props: {locations: LOI[]}) {
+function LOIMarkers() {
     return (
         <>
-            {props.locations.map( (loi : LOI) => (
-                <LOIMarker loi={loi} />
+            {locations.map( (loi : LOI) => (
+                <LOIMarker key={loi.id} loi={loi} />
             ))}
         </>
     )
