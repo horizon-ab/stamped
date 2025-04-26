@@ -9,6 +9,28 @@ export async function getLocations() {
     return locations;
 }
 
+export async function getLocationByName(name: string) {
+    const db = await getDbConnection();
+    const location = await db.get('SELECT * FROM locations WHERE name = ?', name);
+    await db.close();
+    return location;
+}
+
+export async function getLocationByUserStamps(userName: string) {
+    const db = await getDbConnection();
+
+    const location = await db.all(
+        `SELECT locations.* 
+         FROM locations 
+         JOIN stamps ON locations.id = stamps.location_id 
+         JOIN users ON stamps.user_id = users.id 
+         WHERE users.name = ?`,
+        userName
+    );
+    await db.close();
+    return location;
+}
+
 export async function createLocation(name: string, description: string, latitude: number, longitude: number) {
     const db = await getDbConnection();
 

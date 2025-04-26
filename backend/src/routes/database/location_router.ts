@@ -1,4 +1,23 @@
 import express, { Request, Response, Router } from 'express';
+import { getLocationByUserStamps, getLocations } from '../../queries/location';
 
 const router: Router = express.Router();
 
+router.get('/', async (req: Request, res: Response) => {
+    const locations = await getLocations();
+    res.json(locations);
+});
+
+router.get('/getByUser', async (req: Request, res: Response) => {
+    const { name } = req.body; 
+    
+    try {
+        const location = await getLocationByUserStamps(name);
+        res.status(200).json(location);
+    } catch (error) {
+        console.error('Error fetching location by user:', error);
+        res.status(500).json({ error: error });
+    }
+});
+
+export default router;

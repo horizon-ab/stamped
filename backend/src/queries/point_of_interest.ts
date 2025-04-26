@@ -9,6 +9,20 @@ export async function getPointOfInterests() {
     return pointOfInterests;
 }
 
+export async function getPointOfInterestByUserStamps(userName: string) {
+    const db = await getDbConnection();
+    const pointOfInterests = await db.all(
+        `SELECT point_of_interest.* 
+         FROM point_of_interest 
+         JOIN stamps ON point_of_interest.id = stamps.point_of_interest_id 
+         JOIN users ON stamps.user_id = users.id 
+         WHERE users.name = ?`,
+        userName
+    );
+    await db.close();
+    return pointOfInterests;
+}
+
 export async function createPointOfInterest(name: string, description: string, latitude: number, longitude: number) {
     const db = await getDbConnection();
 

@@ -17,10 +17,18 @@ export async function getUserByName(name: string) {
     return user;
 }
 
-export async function createUser(name:string) {
+export async function createUser(name: string) {
     const db = await getDbConnection();
 
-    const user = await db.run('INSERT INTO users (name) VALUES (?)', name);
-    await db.close();
-    return user;
+    try {
+        const user = await db.run('INSERT INTO users (name) VALUES (?)', name);
+        await db.close();
+        return user;
+    } catch (error: any) {
+        await db.close();
+        if (error.code === 'SQLITE_CONSTRAINT') {
+            throw new Error(`User with name "${name}" already exists.`);
+        }
+        throw error; // Re-throw other unexpected errors
+    }
 }

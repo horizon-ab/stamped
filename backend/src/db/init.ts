@@ -13,34 +13,34 @@ const initializeDatabase = async () => {
     await db.exec(`
         CREATE TABLE IF NOT EXISTS stamps (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        challenge_id INTEGER NOT NULL,
-        location_id INTEGER NOT NULL,
-        point_of_interest_id INTEGER NOT NULL,
+        user_name VARCHAR(255) NOT NULL,
+        challenge_name VARCHAR(255) NOT NULL,
+        location_name VARCHAR(255) NOT NULL,
+        point_of_interest_name VARCHAR(255) NOT NULL,
         stamp VARCHAR(255) NOT NULL,
         datetime DATETIME NOT NULL,
         photolink VARCHAR(255) NOT NULL,
-        FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (challenge_id) REFERENCES challenges(id)
-        FOREIGN KEY (location_id) REFERENCES locations(id),
-        FOREIGN KEY (point_of_interest_id) REFERENCES point_of_interests(id)
+        FOREIGN KEY (user_name) REFERENCES users(name),
+        FOREIGN KEY (challenge_name) REFERENCES challenges(name),
+        FOREIGN KEY (location_name) REFERENCES locations(name),
+        FOREIGN KEY (point_of_interest_name) REFERENCES point_of_interests(name)
         );
     `);
 
     await db.exec(`
         CREATE TABLE IF NOT EXISTS challenges (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        poi_id INTEGER NOT NULL,
+        poi_name VARCHAR(255) NOT NULL,
         name VARCHAR(255) NOT NULL UNIQUE,
         description TEXT NOT NULL,
-        FOREIGN KEY (poi_id) REFERENCES point_of_interests(id)
+        FOREIGN KEY (poi_name) REFERENCES point_of_interests(name)
         );
     `);
 
     await db.exec(`
         CREATE TABLE IF NOT EXISTS locations (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name VARCHAR(255) NOT NULL,
+        name VARCHAR(255) NOT NULL UNIQUE,
         description TEXT NOT NULL,
         latitude REAL NOT NULL,
         longitude REAL NOT NULL
@@ -50,12 +50,12 @@ const initializeDatabase = async () => {
     await db.exec(`
         CREATE TABLE IF NOT EXISTS point_of_interests (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        location_id INTEGER NOT NULL,
-        name VARCHAR(255) NOT NULL,
+        location_name VARCHAR(255) NOT NULL,
+        name VARCHAR(255) NOT NULL UNIQUE,
         description TEXT NOT NULL,
         latitude REAL NOT NULL,
         longitude REAL NOT NULL,
-        FOREIGN KEY (location_id) REFERENCES locations(id)
+        FOREIGN KEY (location_name) REFERENCES locations(name)
         );
     `);
 

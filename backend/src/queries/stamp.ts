@@ -9,34 +9,44 @@ export async function getStamps() {
     return stamps;
 }
 
-export async function getStampByUserId(userId: string) {
+export async function getStampsByUserName(userName: string) {
     const db = await getDbConnection();
 
-    const stamp = await db.get('SELECT * FROM stamps WHERE user_id = ?', userId);
+    const stamps = await db.all(
+        `SELECT stamps.* 
+         FROM stamps 
+         JOIN users ON stamps.user_id = users.id 
+         WHERE users.name = ?`,
+        userName
+    );
     await db.close();
-    return stamp;
+    return stamps;
 }
 
-export async function getStampByLocationId(locationId: string) {
+export async function getStampsByLocationName(locationName: string) {
     const db = await getDbConnection();
 
-    const stamp = await db.get('SELECT * FROM stamps WHERE location_id = ?', locationId);
+    const stamps = await db.all(
+        `SELECT stamps.* 
+         FROM stamps 
+         JOIN locations ON stamps.location_id = locations.id 
+         WHERE locations.name = ?`,
+        locationName
+    );
     await db.close();
-    return stamp;
+    return stamps;
 }
 
-export async function getStampByChallengeId(challengeId: string) {
+export async function getStampsByPoiName(poiName: string) {
     const db = await getDbConnection();
 
-    const stamp = await db.get('SELECT * FROM stamps WHERE challenge_id = ?', challengeId);
+    const stamps = await db.all(
+        `SELECT stamps.* 
+         FROM stamps 
+         JOIN points_of_interest ON stamps.poi_id = points_of_interest.id 
+         WHERE points_of_interest.name = ?`,
+        poiName
+    );
     await db.close();
-    return stamp;
-}
-
-export async function getStampByPointOfInterestId(pointOfInterestId: string) {
-    const db = await getDbConnection();
-
-    const stamp = await db.get('SELECT * FROM stamps WHERE point_of_interest_id = ?', pointOfInterestId);
-    await db.close();
-    return stamp;
+    return stamps;
 }
