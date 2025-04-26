@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import FooterNav from "../components/footerNav";
-
+import { ProfileGenerator } from "../utils/MockDataGenerator";
 // schema of image info tbm
 const sampleStamps = [
     {
@@ -26,14 +26,14 @@ const sampleStamps = [
       img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Sydney_Opera_House_and_Harbour_Bridge_Dusk_%282%29_2019-06-21.jpg/320px-Sydney_Opera_House_and_Harbour_Bridge_Dusk_%282%29_2019-06-21.jpg",
     },
     {
-      name: "Rio de Janeiro",
+      name: "Santa Barbara",
       date: "2024-12-15",
-      img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Rio_de_Janeiro_-_Vista_Chinesa.jpg/320px-Rio_de_Janeiro_-_Vista_Chinesa.jpg",
+      img: "https://th.bing.com/th/id/R.b93ad928cda4d6743547b228d21d8ed2?rik=kFkQIFYAXz1yUQ&pid=ImgRaw&r=0",
     },
     {
-      name: "Cape Town",
+      name: "Antioch",
       date: "2024-11-20",
-      img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/CapeTownTableMountain-MichaelGraef.jpg/320px-CapeTownTableMountain-MichaelGraef.jpg",
+      img: "https://th.bing.com/th/id/OIP.FYdKR5fsFQAxbXyXJcg7oQHaEO?w=283&h=180&c=7&r=0&o=5&dpr=2.2&pid=1.7",
     }
 ];
 
@@ -41,10 +41,10 @@ const Profile: React.FC = () => {
   // Mock user schema tbm
   const user = {
     name: "f''''(x) Traveler",
-    avatar: "https://i.ibb.co/0RFRqcfY/IMG-3319.jpg",
-    bio: "Proud Goontrotter & culture enthusiast. Collecting stamps on every adventure!",
+    avatar: ProfileGenerator.randomAvatar(),
+    bio: ProfileGenerator.randomBio(),
     stampsCollected: sampleStamps.length,
-    joined: "2024-08-19",
+    joined: ProfileGenerator.randomDate(),
   };
 
   // Responsive adjustments
