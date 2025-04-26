@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import dotenv from 'dotenv'
 
 // Responsive static map: width adapts to device, maxes at 360px for modern phones
 function useCurrentPosition() {
@@ -32,7 +33,7 @@ function getStaticMapUrl(
   size = "340x440"
 ) {
   const zoom = 13;
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY 
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY 
   return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=${zoom}&size=${size}&scale=2&maptype=roadmap&markers=color:red%7Clabel:U%7C${lat},${lng}&key=${apiKey}`;
 }
 
