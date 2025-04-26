@@ -45,4 +45,10 @@ router.get('/getByPOI', async (req: Request, res: Response) => {
     }
 });
 
+router.post('/submitStamp', async (req: Request, res: Response) => {
+    const { userName, poiName, image } = req.body;
+
+    
+});
+
 export default router;

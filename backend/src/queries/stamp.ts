@@ -50,3 +50,31 @@ export async function getStampsByPoiName(poiName: string) {
     await db.close();
     return stamps;
 }
+
+export async function createStamp(
+    userName: string,
+    challengeName: string,
+    locationName: string,
+    poiName: string,
+    stampName: string,
+    imageUrl: string
+) {
+
+    const date = new Date();
+
+    const db = await getDbConnection();
+
+    const result = await db.run(
+        `INSERT INTO stamps (user_name, challenge_name, location_name, point_of_interest_name, stamp, datetime, photolink) 
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        userName,
+        challengeName,
+        locationName,
+        poiName,
+        stampName,
+        date.toISOString(),
+        imageUrl
+    );
+    await db.close();
+    return result;
+}
