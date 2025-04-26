@@ -177,7 +177,7 @@ function POIMarker(props: {poi: POI}) {
             <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
             {infoWindowShown && (
                 <InfoWindow
-                    style={{ height: '200px', width: '200px' }}
+                    style={{ height: '230px', width: '220px' }}
                     anchor={marker}
                     onClose={handleClose}
                 >
