@@ -1,8 +1,8 @@
 'use client'
 
-import {APIProvider, Map, MapCameraChangedEvent, AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
+import {APIProvider, Map, MapCameraChangedEvent, AdvancedMarker, Pin, useAdvancedMarkerRef, InfoWindow } from '@vis.gl/react-google-maps';
 import dotenv from 'dotenv';
-import { useEffect, useRef} from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 // TODO: create utils folder with functions, import and fetch POIs from the database
 
@@ -14,7 +14,11 @@ console.log(mapId)
 
 type POI = { id : number, name : string, location: google.maps.LatLngLiteral }
 const locations: POI[] = [
-    {id: 1, name: "ucla", location: { lat: 34.0722, lng: -118.4427}}
+    {id: 1, name: "UCLA", location: { lat: 34.0722, lng: -118.4427}},
+    {id: 2, name: "Santa Monica", location: { lat: 34.0119, lng: -118.4916}},
+    {id: 3, name: "Hollywood", location: { lat: 34.0907, lng: -118.3266}},
+    {id: 4, name: "Malibu", location: { lat: 34.0381, lng: -118.6923}},
+    {id: 5, name: "Silver Lake", location: { lat: 34.0829, lng: -118.2733}}
 ]
 
 const MapDisplay = () => {
@@ -23,7 +27,7 @@ const MapDisplay = () => {
         <APIProvider apiKey={key ?? ''} onLoad={() => console.log('Maps API has loaded.')}>
             <Map
                 style={{ height: '100vh', width: '100%' }}
-                defaultZoom={13}
+                defaultZoom={10}
                 defaultCenter={ { lat: 34.0549, lng: -118.2426 } }
                 mapId={mapId ?? ''}
                 onCameraChanged={ (ev: MapCameraChangedEvent) =>
@@ -43,15 +47,37 @@ function POIMarkers(props: {locations: POI[]}) {
     return (
         <>
             {props.locations.map( (poi : POI) => (
-                <AdvancedMarker
-                    key={poi.id}
-                    position={poi.location}
-                >
-                    <Pin background={'#00FF00'} glyphColor={'#000'} borderColor={'#000'} />
-                </AdvancedMarker>
-                
+                <POIMarker poi={poi} />
             ))}
         </>
+    )
+}
+
+function POIMarker(props: {poi: POI}) {
+    const [markerRef, marker] = useAdvancedMarkerRef();
+    const [infoWindowShown, setInfoWindowShown] = useState(false);
+
+    const handleMarkerClick = useCallback(
+        () => setInfoWindowShown(isShown => !isShown),
+        []
+    )
+
+    const handleClose = useCallback(() => setInfoWindowShown(false), []);
+
+    return (
+        <AdvancedMarker
+            key={props.poi.id}
+            ref={markerRef}
+            position={props.poi.location}
+            onClick={handleMarkerClick}
+        >
+            <Pin background={'#00FF00'} glyphColor={'#000'} borderColor={'#000'} />
+            {infoWindowShown && (
+                <InfoWindow anchor={marker} onClose={handleClose}>
+                    <div className='text-black'>List POIs and descriptions/photos/other people stuff</div>
+                </InfoWindow>
+            )}
+        </AdvancedMarker>
     )
 }
 
