@@ -260,7 +260,7 @@ function LOIMarker(props: {loi: LOI, transparent: boolean}) {
                     return;
                 } 
 
-                const userStampsResponse = await fetch('http://localhost:80/api/stamp/getByUserAndLocation/' + user + '/' + props.locationName, {
+                const userStampsResponse = await fetch('http://localhost:80/api/stamp/getByUserAndLocation/' + user + '/' + props.loi.name, {
                     method: 'GET',
                 });
 
