@@ -73,7 +73,7 @@ function useCurrentPosition() {
 }
 
 // const API_BASE = "http://localhost:80/api/user";
-const API_BASE = "https://stamped.onrender.com/api"
+const API_BASE = "back.stamped.photo/api"
 
 const Home: React.FC = () => {
   const { position, error } = useCurrentPosition();

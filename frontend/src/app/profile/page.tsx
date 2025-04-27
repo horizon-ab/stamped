@@ -13,7 +13,7 @@ function getLoggedInUsername() {
 
 // API helpers (all requests go through src/routes/api)
 // const API_BASE = "http://localhost:80/api";
-const API_BASE = "https://stamped.onrender.com/api"
+const API_BASE = "back.stamped.photo/api"
 
 // Types (adjust as needed to match your schema)
 type User = {

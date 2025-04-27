@@ -26,7 +26,7 @@ const key = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
 const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAP_ID;
 
 // const API_BASE = "http://localhost:80/api"
-const API_BASE = "https://stamped.onrender.com/api"
+const API_BASE = "back.stamped.photo/api"
 
 export type LOI = { id : number, name : string, location: google.maps.LatLngLiteral }
 export type POI = { id : number, locationName : string, name : string, description : string, location: google.maps.LatLngLiteral } 
@@ -260,7 +260,7 @@ function LOIMarker(props: {loi: LOI, transparent: boolean}) {
                     return;
                 } 
 
-                const userStampsResponse = await fetch('http://localhost:80/api/stamp/getByUserAndLocation/' + user + '/' + props.loi.name, {
+                const userStampsResponse = await fetch(`${API_BASE}/stamp/getByUserAndLocation/` + user + '/' + props.loi.name, {
                     method: 'GET',
                 });
 

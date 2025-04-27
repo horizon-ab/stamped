@@ -14,7 +14,7 @@ import { useState, useEffect } from 'react'
 import type { POI } from './map_display'
 
 // const API_BASE = "http://localhost:80/api"
-const API_BASE = "https://stamped.onrender.com/api"
+const API_BASE = "back.stamped.photo/api"
 
 const Upload = (props: { poi: POI }) => {
   const [challenge, setChallenge] = useState('');
