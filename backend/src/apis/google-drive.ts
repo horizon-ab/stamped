@@ -30,8 +30,17 @@ export async function uploadImage(fileBuffer: Buffer, originalName: string) {
       fields: 'id',
     });
 
+    await drive.permissions.create({
+      fileId: response.data.id,
+      requestBody: {
+        role: 'reader',
+        type: 'anyone',
+      },
+    });
+
     console.log('Uploaded File ID:', response.data.id);
-    return response.data.id; 
+    console.log('Public URL:', `https://drive.google.com/uc?id=${response.data.id}`);
+    return `https://drive.google.com/uc?id=${response.data.id}`; 
   } catch (error) {
     console.error('Error uploading file to Google Drive:', error);
     throw error;
