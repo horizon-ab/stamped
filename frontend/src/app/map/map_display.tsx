@@ -4,6 +4,7 @@ import {APIProvider, Map, MapCameraChangedEvent, AdvancedMarker, Pin, useAdvance
 import dotenv from 'dotenv';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image'
+import clsx from 'clsx';
 import {
     Carousel,
     CarouselContent,
@@ -103,15 +104,37 @@ const MapDisplay = () => {
 
 
 // TODO: make it so that it fetches from the DB using location id instead
-function LocationDisplay(props: {locationName: string}) {
+function LocationDisplay(props: { locationName: string }) {
     return (
-        <div className='text-black bg-white border border-violet-400 rounded-lg p-10'>
-            <div>Location: {props.locationName}</div>
-            <div>Stamps: 0/11</div>
-            <div className='text-xl text-center'>11%</div>
+      <div
+        className={clsx(
+          "absolute",
+          "top-0",
+          "right-2",
+          "scale-95",
+          "z-20", // ensures it's above the map
+          "flex items-center gap-3 bg-white/90 px-3 py-1.25 rounded-xl shadow-md border border-indigo-200"
+        )}
+        style={{
+          minWidth: 0,
+          maxWidth: 210,
+        }}
+      >
+        <div
+          className="w-8 h-8 flex items-center justify-center rounded-full text-base font-bold bg-indigo-50 text-indigo-600 shadow-sm"
+          aria-hidden
+        >
+          📍
         </div>
-    )
-}
+        <div className="flex flex-col justify-center flex-1 min-w-0">
+          <div className="text-[11px] font-semibold text-indigo-700 truncate">{props.locationName}</div>
+          <div className="text-[10px] text-indigo-400">Stamps: 0/11</div>
+        </div>
+        <div className="text-xs text-indigo-600 font-bold text-center min-w-[2rem]">11%</div>
+      </div>
+    );
+  }
+
 
 
 function LOIMarkers(props: {currentLocationId: number}) {
