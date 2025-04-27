@@ -44,7 +44,7 @@ var locations: LOI[] = []
 var points: POI[] = []
 
 try {
-    const locationsResponse = await fetch(`${API_BASE}/api/location/`, {
+    const locationsResponse = await fetch(`${API_BASE}/location/`, {
           method: 'GET',
         })
     
