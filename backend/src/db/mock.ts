@@ -89,6 +89,24 @@ const generateMockData = async () => {
           joined: '2024-06-16',
           avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Bob'
         },
+        {
+          name: 'Charlie',
+          bio: 'Nature lover. Always on the lookout for the next great shot.',
+          joined: '2024-06-17',
+          avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Charlie'
+        },
+        {
+          name: 'David',
+          bio: 'History buff. Enjoys exploring old towns.',
+          joined: '2024-06-18',
+          avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=David'
+        },
+        {
+          name: 'Eve',
+          bio: 'Foodie. Loves to discover new places to eat.',
+          joined: '2024-06-19',
+          avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Eve'
+        },
       ];
       for (const user of users) {
         await db.run(
