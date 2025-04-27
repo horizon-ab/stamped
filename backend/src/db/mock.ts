@@ -77,15 +77,26 @@ const generateMockData = async () => {
 
       // Insert sample users
       const users = [
-        { name: 'Alice' },
-        { name: 'Bob' },
-        { name: 'Charlie' },
-        { name: 'David' },
-        { name: 'Eve' },
-    ];
-    for (const user of users) {
-        await db.run('INSERT INTO users (name) VALUES (?)', [user.name]);
-    }
+        {
+          name: 'Alice',
+          bio: 'Explorer. Lover of cityscapes and sunsets.',
+          joined: '2024-06-15',
+          avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Alice'
+        },
+        {
+          name: 'Bob',
+          bio: 'Travel photographer. Seeker of adventure.',
+          joined: '2024-06-16',
+          avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Bob'
+        },
+      ];
+      for (const user of users) {
+        await db.run(
+          'INSERT INTO users (name, bio, joined, avatar) VALUES (?, ?, ?, ?)',
+          [user.name, user.bio, user.joined, user.avatar]
+        );
+      }
+      
 
     // Insert sample stamps (assuming all other tables are populated)
     const stamps = [
