@@ -94,15 +94,6 @@ try {
 //     {id: 1, locationId: 1, name: "Pauley Pavilion", description: "Code for a hackathon!", location: {lat: 34.070211, lng: -118.446775}}
 // ]
 
-const images: string[] = [
-    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
-    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
-    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
-    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
-    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
-    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
-]
-
 const MapDisplay = () => {
     const [showLocationDisplay, setShowLocationDisplay] = useState(false);
     const [currentLocation, setCurrentLocation] = useState('');
@@ -151,7 +142,6 @@ const MapDisplay = () => {
         
     )
 }
-
 
 // TODO: make it so that it fetches from the DB using location id instead
 function LocationDisplay(props: { locationName: string }) {
@@ -283,8 +273,8 @@ function POIDisplay(props: { poi: POI }) {
                     datetime: string;
                     photolink: string;
                 }[];
-                setData(stampsInfo);
-                setDataExists(true);
+                setData(stampsInfo || []);
+                setDataExists(stampsInfo.length > 0);
             } catch (error) {
                 console.log('Error in fetching stamps.', error);
                 setData([]);
@@ -297,7 +287,7 @@ function POIDisplay(props: { poi: POI }) {
 
     return (
         <div className="flex flex-col text-black gap-4">
-            <div className="font-bold text-xl">{props.poi.name}</div>
+            <div className="font-bold text-xl text-center">{props.poi.name}</div>
             <Carousel
                 opts={{
                     align: 'center',
@@ -306,7 +296,7 @@ function POIDisplay(props: { poi: POI }) {
                 }}
             >
                 <CarouselContent>
-                    {data.map((stamp, index) => (
+                    {dataExists && data.map((stamp, index) => (
                         <CarouselItem key={index} className="overflow-hidden basis-1/2">
                             <div className="relative w-full h-20">
                                 <Image
@@ -319,6 +309,10 @@ function POIDisplay(props: { poi: POI }) {
                             </div>
                         </CarouselItem>
                     ))}
+                    {!dataExists && <div className='text-center text-xl p-5'>
+                        Be the first to be Stamped!
+                    </div>
+                    }
                 </CarouselContent>
             </Carousel>
             <div className="text-center">{props.poi.description}</div>

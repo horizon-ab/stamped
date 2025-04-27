@@ -27,6 +27,7 @@ const generateMockData = async () => {
         { name: 'Historic District', description: 'Full of old buildings and landmarks.', latitude: 34.0450, longitude: -118.2350 },
         { name: 'Seaside Marina', description: 'A beautiful area by the ocean.', latitude: 33.9500, longitude: -118.4000 },
         { name: 'Mountain View Estates', description: 'A quiet suburban area.', latitude: 34.1000, longitude: -118.1500 },
+        { name: "UCLA", description: "#1 Public University",  latitude : 34.0722, longitude : -118.4427},
     ];
     for (const location of locations) {
         await db.run(
@@ -47,6 +48,7 @@ const generateMockData = async () => {
         { location_name: 'Seaside Marina', name: 'Fishing Pier', description: 'A place for fishing and views.', latitude: 33.9450, longitude: -118.3950 },
         { location_name: 'Mountain View Estates', name: 'Mountain Trailhead', description: 'Start of a hiking trail.', latitude: 34.1050, longitude: -118.1450 },
         { location_name: 'Mountain View Estates', name: 'Scenic Overlook', description: 'A place with a great view.', latitude: 34.0950, longitude: -118.1550 },
+        { location_name: 'UCLA', name: "Pauley Pavilion", description: "Big ass pavilion!", latitude: 34.070211, longitude: -118.446775}
     ];
     for (const poi of pointsOfInterest) {
         await db.run(
@@ -67,6 +69,7 @@ const generateMockData = async () => {
         { poi_name: 'Fishing Pier', name: 'Sunset Pier Photo', description: 'Take a photo of the sunset from the pier.' },
         { poi_name: 'Mountain Trailhead', name: 'Trailhead Marker', description: 'Photograph the start of the trail.' },
         { poi_name: 'Scenic Overlook', name: 'Panoramic View', description: 'Capture a panoramic photo of the view.' },
+        { poi_name: 'Pauley Pavilion', name: 'Hackathon', description: 'Code for LA Hacks 2025!' },
     ];
     for (const challenge of challenges) {
         await db.run(

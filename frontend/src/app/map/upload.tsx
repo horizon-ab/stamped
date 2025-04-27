@@ -62,7 +62,7 @@ const Upload = (props: {poi: POI}) => {
     return(
         <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Upload</Button>
+        <Button variant="outline">Challenge</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
