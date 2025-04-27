@@ -175,6 +175,14 @@ function POIMarker(props: {poi: POI}) {
             position={props.poi.location}
         >
             <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
+            <Circle 
+                radius={0.00100}
+                center={props.poi.location}
+                strokeColor={'#0c4cb3'}
+                strokeOpacity={1}
+                strokeWeight={3}
+                fillColor={'#808080'}
+            / >
             {infoWindowShown && (
                 <InfoWindow
                     style={{ height: '230px', width: '220px' }}
