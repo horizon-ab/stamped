@@ -5,12 +5,12 @@ import stampRouter from './routes/database/stamp_router';
 import locationRouter from './routes/database/location_router';
 import poiRouter from './routes/database/point_of_interest_router';
 import challengeRouter from './routes/database/challenge_router';
-// import cors from 'cors';
+import cors from 'cors';
 
 const app = express();
 const port = 80;
 app.use(express.json());
-// app.use(cors());
+app.use(cors());
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, Welcome to Stamped Backend! We\'re mega cooked chat.');

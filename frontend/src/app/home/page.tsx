@@ -72,8 +72,8 @@ function useCurrentPosition() {
   return { position, error };
 }
 
-// const API_BASE = "http://localhost:80/api/user";
-const API_BASE = "back.stamped.photo/api"
+const API_BASE = "http://localhost:80/api/user";
+// const API_BASE = "back.stamped.photo/api"
 
 const Home: React.FC = () => {
   const { position, error } = useCurrentPosition();

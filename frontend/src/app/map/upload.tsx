@@ -40,7 +40,7 @@ const Upload = (props: { poi: POI }) => {
           };
           setChallenge(challengeInfo.description);
         } else {
-          setChallenge("Challenge not found.");
+          setChallenge("Take a selfie with the first thing you see!");
         }
       } catch (error) {
         console.log("Failed to fetch challenge.");
@@ -49,6 +49,7 @@ const Upload = (props: { poi: POI }) => {
     };
 
     fetchChallenge();
+    console.log("Fetch Challenge attempted")
   }, [props.poi.name]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
