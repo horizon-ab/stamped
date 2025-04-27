@@ -7,7 +7,7 @@
     "dev": "nodemon",
     "build": "tsc -p .",
     "build-run": "tsc -p . && node dist/app.js",
-    "db:init": "ts-node ./src/db/init.ts"
+    "db:init": "ts-node ./src/db/init.ts && ts-node ./src/db/mock.ts"
   },
   "keywords": [],
   "author": "",
