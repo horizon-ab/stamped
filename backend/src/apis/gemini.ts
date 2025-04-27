@@ -18,11 +18,13 @@ export async function generateChallenge(poi: string){ // poi = point of interest
 // });
 
 export async function verifyChallenge(image: Buffer, challenge: string) { // temporarily, will change this for actual verification
-    const base64Image = image.toString("base64");
+    // const base64Image = image.toString("base64");
 
-    const response = await ai.models.generateContent({
-        model: "gemini-2.5-pro-preview-03-25",
-        contents: "verify this image [" + base64Image + "] satisfies the requirements of the challenge: " + challenge,
-    });
-    return response.text;
+    // const response = await ai.models.generateContent({
+    //     model: "gemini-2.5-pro-preview-03-25",
+    //     contents: "verify this image [" + base64Image + "] satisfies the requirements of the challenge: " + challenge,
+    // });
+    // return response.text;
+
+    return true; // TODO: if we decide to have verify challenge, we can use this function
 }
