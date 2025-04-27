@@ -8,8 +8,8 @@ router.get('/', async (req: Request, res: Response) => {
     res.json(pois);
 });
 
-router.get('/getByUser', async (req: Request, res: Response) => {
-    const { name } = req.body;  
+router.get('/getByUser/:name', async (req: Request, res: Response) => {
+    const { name } = req.params;  
     
     try {
         const location = await getPointOfInterestByUserStamps(name);

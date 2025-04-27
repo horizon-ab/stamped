@@ -8,8 +8,8 @@ router.get('/', async (req: Request, res: Response) => {
     res.json(challenges);
 });
 
-router.get('/getByPOI' , async (req: Request, res: Response) => {
-    const { poi } = req.body;
+router.get('/getByPOI/:poi' , async (req: Request, res: Response) => {
+    const { poi } = req.params;
     const challenge = await getChallengeByPoiName(poi);
 
     if (challenge) {

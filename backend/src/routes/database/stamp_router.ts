@@ -18,8 +18,8 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 // this endpoint prob most important, returns all stamps for a user which in itself has image links
-router.get('/getByUser', async (req: Request, res: Response) => {
-    const { name } = req.body; 
+router.get('/getByUser/:name', async (req: Request, res: Response) => {
+    const { name } = req.params; // get the name from the request parameters
 
     try {
         const stamps = await getStampsByUserName(name);
@@ -34,8 +34,8 @@ router.get('/getByUser', async (req: Request, res: Response) => {
     }
 });
 
-router.get('/getByLocation', async (req: Request, res: Response) => {
-    const { location } = req.body; 
+router.get('/getByLocation/:location', async (req: Request, res: Response) => {
+    const { location } = req.params; // get the location from the request parameters
     
     try {
         const stamps = await getStampsByLocationName(location);
@@ -50,8 +50,8 @@ router.get('/getByLocation', async (req: Request, res: Response) => {
     }
 });
 
-router.get('/getByPOI', async (req: Request, res: Response) => {
-    const { poi } = req.body; 
+router.get('/getByPOI/:poi', async (req: Request, res: Response) => {
+    const { poi } = req.params; 
     
     try {
         const stamps = await getStampsByPoiName(poi);
