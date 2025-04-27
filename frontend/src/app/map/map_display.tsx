@@ -248,6 +248,37 @@ function LOIMarkers(props: {currentLocationId: number}) {
 
 function LOIMarker(props: {loi: LOI, transparent: boolean}) {
     const [markerRef, marker] = useAdvancedMarkerRef();
+    const [hasStamped, setHasStamped] = useState(false);
+
+    useEffect(() => {
+        console.log("Changed detected")
+        const fetchUserStamps = async () => {
+            try {
+                const user = localStorage.getItem("stamped-username")
+                if (!user) {
+                    alert("Please log in to submit a stamp.");
+                    return;
+                } 
+
+                const userStampsResponse = await fetch('http://localhost:80/api/stamp/getByUserAndLocation/' + user + '/' + props.locationName, {
+                    method: 'GET',
+                });
+
+                if (userStampsResponse.ok) {
+                    const userStampsInfo = await userStampsResponse.json() as Stamp[];
+                    console.log("Successful User Stamps: " + userStampsInfo)
+                    setHasStamped(userStampsInfo.length > 0);;
+                } else {
+                    console.log("Fetching stamps by username error.")
+                }
+            } catch (error) {
+                console.log("Error occurred: " + error)
+            }
+        };
+
+        fetchUserStamps();
+
+    }, []);
 
     return (
         <AdvancedMarker
@@ -261,7 +292,7 @@ function LOIMarker(props: {loi: LOI, transparent: boolean}) {
                 strokeColor={'#0c4cb3'}
                 strokeOpacity={1}
                 strokeWeight={3}
-                fillColor={'#808080'}
+                fillColor={hasStamped ? '#23cc50':'#808080'}
                 fillOpacity={props.transparent ? 0 : 0.2}
             / >
         </AdvancedMarker>
@@ -311,7 +342,7 @@ function POIMarker(props: {poi: POI}) {
 }
 
 function POIDisplay(props: { poi: POI }) {
-    var poi = props.poi;
+    const poi = props.poi;
     const [data, setData] = useState<Stamp[]>([]);
     const [dataExists, setDataExists] = useState(false);
 
