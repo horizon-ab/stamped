@@ -29,6 +29,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/cors": "^2.8.17",
     "@types/estree": "^1.0.7",
     "@types/node": "^20.17.31",
     "@types/react": "^19",
