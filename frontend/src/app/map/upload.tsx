@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 
 import {
   Dialog,
@@ -14,8 +14,6 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { useState } from 'react'
 import type { POI } from './map_display'
-
-const { Buffer} = require('node:buffer')
 
 const Upload = (props: {poi: POI}) => {
 

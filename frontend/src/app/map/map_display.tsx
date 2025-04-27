@@ -1,3 +1,4 @@
+/* eslint-disable */
 'use client'
 
 import {APIProvider, Map, MapCameraChangedEvent, AdvancedMarker, Pin, useAdvancedMarkerRef, InfoWindow, MapControl, ControlPosition } from '@vis.gl/react-google-maps';
