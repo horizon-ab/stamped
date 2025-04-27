@@ -93,8 +93,7 @@ router.post('/submitStamp', upload.single('image'), async (req: Request, res: Re
         location: 'Not Found'
     };
     
-
-    const { userName, poiName, image } = req.body;
+    const { userName, poiName } = req.body;
 
     const poi = await getPointOfInterestByName(poiName);
     if (!poi) { res.status(404).json({ message: 'POI not found.' }); return; }
@@ -122,9 +121,7 @@ router.post('/submitStamp', upload.single('image'), async (req: Request, res: Re
 
         if (typeof extractedMetadata.location === 'object' && extractedMetadata.location !== null) {
             const { latitude, longitude } = extractedMetadata.location;
-            if (poi.latitude === latitude && poi.longitude === longitude) { // TODO: do the check here
-                console.log('Coordinates match POI:', poiName);
-            } else {
+            if (Math.pow(Number(latitude) - poi.latitude, 2) + Math.pow(Number(longitude) - poi.longitude, 2) >= 100) { // TODO: fine tune number here
                 res.status(406).json({ message: 'Coordinates do not match POI.' });
                 return;
             }
@@ -134,12 +131,12 @@ router.post('/submitStamp', upload.single('image'), async (req: Request, res: Re
         }
 
         
-        if (!(await verifyChallenge(req.file.buffer, challenge.description))) { // for now always true
+        if (!(await verifyChallenge(req.file.buffer, challenge.description))) { // for now always true (so expression always false) for now
             res.status(406).json({ message: 'Challenge verification failed.' });
             return;
         }
 
-
+        // upload image to google drive
         console.log(`Uploading ${req.file.originalname} to Google Drive...`);
         const url = await uploadImage(req.file.buffer, req.file.originalname);
         console.log(`Successfully uploaded ${req.file.originalname}.`);
