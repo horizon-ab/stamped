@@ -13,6 +13,9 @@ import { Button } from "@/components/ui/button"
 import { useState, useEffect } from 'react'
 import type { POI } from './map_display'
 
+// const API_BASE = "http://localhost:80/api"
+const API_BASE = "https://stamped.onrender.com/api"
+
 const Upload = (props: { poi: POI }) => {
   const [challenge, setChallenge] = useState('');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -23,7 +26,7 @@ const Upload = (props: { poi: POI }) => {
     const fetchChallenge = async () => {
       try {
         const challengeResponse = await fetch(
-          `http://localhost:80/api/challenge/getByPOI/${props.poi.name}`,
+          `${API_BASE}/challenge/getByPOI/${props.poi.name}`,
           {
             method: 'GET',
           }
@@ -75,7 +78,7 @@ const Upload = (props: { poi: POI }) => {
     formData.append('poiName', props.poi.name);
 
     try {
-      const response = await fetch('http://localhost:80/api/stamp/submitStamp', {
+      const response = await fetch(`${API_BASE}/stamp/submitStamp`, {
         method: 'POST',
         body: formData,
       });

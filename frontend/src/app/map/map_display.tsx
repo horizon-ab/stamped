@@ -25,6 +25,9 @@ dotenv.config();
 const key = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
 const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAP_ID;
 
+// const API_BASE = "http://localhost:80/api"
+const API_BASE = "https://stamped.onrender.com/api"
+
 export type LOI = { id : number, name : string, location: google.maps.LatLngLiteral }
 export type POI = { id : number, locationName : string, name : string, description : string, location: google.maps.LatLngLiteral } 
 export type Stamp = { id : number,
@@ -41,11 +44,11 @@ var locations: LOI[] = []
 var points: POI[] = []
 
 try {
-    const locationsResponse = await fetch('http://localhost:80/api/location/', {
+    const locationsResponse = await fetch(`${API_BASE}/api/location/`, {
           method: 'GET',
         })
     
-    const poiResponse = await fetch('http://localhost:80/api/poi/', {
+    const poiResponse = await fetch(`${API_BASE}/poi/`, {
         method: 'GET',
         })
 
@@ -161,7 +164,7 @@ function LocationDisplay(props: { locationName: string }) {
                     return;
                 } 
 
-                const userStampsResponse = await fetch('http://localhost:80/api/stamp/getByUser/' + user, {
+                const userStampsResponse = await fetch(`${API_BASE}/stamp/getByUser/` + user, {
                     method: 'GET',
                 });
 
@@ -179,7 +182,7 @@ function LocationDisplay(props: { locationName: string }) {
 
         const fetchLocationStamps = async () => {
             try {
-                const locationStampsResponse = await fetch('http://localhost:80/api/stamp/getByLocation/' + props.locationName, {
+                const locationStampsResponse = await fetch(`${API_BASE}/stamp/getByLocation/` + props.locationName, {
                     method: 'GET',
                 })
 
@@ -315,7 +318,7 @@ function POIDisplay(props: { poi: POI }) {
     useEffect(() => {
         const fetchStamps = async () => {
             try {
-                const stampsResponse = await fetch('http://localhost:80/api/stamp/getByPOI/' + poi.name, {
+                const stampsResponse = await fetch(`${API_BASE}/stamp/getByPOI/` + poi.name, {
                     method: 'GET',
                 });
                 console.log('Successful stamps fetch.');
