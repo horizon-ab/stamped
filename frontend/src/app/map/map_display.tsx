@@ -4,6 +4,7 @@ import {APIProvider, Map, MapCameraChangedEvent, AdvancedMarker, Pin, useAdvance
 import dotenv from 'dotenv';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image'
+import clsx from 'clsx';
 import {
     Carousel,
     CarouselContent,
@@ -23,23 +24,69 @@ import Upload from './upload'
 dotenv.config();
 const key = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
 const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAP_ID;
-console.log(key)
-console.log(mapId)
 
 export type LOI = { id : number, name : string, location: google.maps.LatLngLiteral }
-export type POI = { id : number, locationId : number, name : string, description : string, location: google.maps.LatLngLiteral } // TODO: add photos component
+export type POI = { id : number, locationName : string, name : string, description : string, location: google.maps.LatLngLiteral } 
 
-const locations: LOI[] = [
-    {id: 1, name: "UCLA", location: { lat: 34.0722, lng: -118.4427}},
-    {id: 2, name: "Santa Monica", location: { lat: 34.0119, lng: -118.4916}},
-    {id: 3, name: "Hollywood", location: { lat: 34.0907, lng: -118.3266}},
-    {id: 4, name: "Malibu", location: { lat: 34.0381, lng: -118.6923}},
-    {id: 5, name: "Silver Lake", location: { lat: 34.0829, lng: -118.2733}}
-]
+var locations: LOI[] = []
+var points: POI[] = []
 
-const points: POI[] = [
-    {id: 1, locationId: 1, name: "Pauley Pavilion", description: "Code for a hackathon!", location: {lat: 34.070211, lng: -118.446775}}
-]
+try {
+    const locationsResponse = await fetch('http://localhost:80/api/location/', {
+          method: 'GET',
+          mode: "no-cors"
+        })
+    
+    const poiResponse = await fetch('http://localhost:80/api/poi/', {
+        method: 'GET',
+        mode: "no-cors"
+        })
+
+    if (locationsResponse.ok) {
+        console.log("Successful locations fetch.")
+        const locationsInfo = await locationsResponse.json() as { id : number, name : string, latitude : number, longitude : number}[]
+        locations = locationsInfo.map(location => (
+            {
+                id: location.id,
+                name: location.name,
+                location : {
+                    lat : location.latitude,
+                    lng : location.longitude
+                }
+            }
+        ))
+        
+    } else {
+        console.log("Unsuccessful locations fetch.")
+    }
+
+    if (poiResponse.ok) {
+        console.log("Successful POIs fetch.")
+        const poiInfo = await poiResponse.json() as { id : number, location_name : string, name : string, description : string, latitude : number, longitude : number}[]
+        points = poiInfo.map(poi => (
+            { id : poi.id, locationName : poi.location_name, name : poi.name, description : poi.description, location : { lat : poi.latitude, lng : poi.longitude }}
+        ))
+        
+        
+    } else {
+        console.log("Unsuccessful POI fetch.")
+    }
+
+} catch (error) {
+
+}
+
+//  locations = [
+//     {id: 1, name: "UCLA", location: { lat: 34.0722, lng: -118.4427}},
+//     {id: 2, name: "Santa Monica", location: { lat: 34.0119, lng: -118.4916}},
+//     {id: 3, name: "Hollywood", location: { lat: 34.0907, lng: -118.3266}},
+//     {id: 4, name: "Malibu", location: { lat: 34.0381, lng: -118.6923}},
+//     {id: 5, name: "Silver Lake", location: { lat: 34.0829, lng: -118.2733}}
+// ]
+
+// points: POI[] = [
+//     {id: 1, locationId: 1, name: "Pauley Pavilion", description: "Code for a hackathon!", location: {lat: 34.070211, lng: -118.446775}}
+// ]
 
 const images: string[] = [
     "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
@@ -103,15 +150,37 @@ const MapDisplay = () => {
 
 
 // TODO: make it so that it fetches from the DB using location id instead
-function LocationDisplay(props: {locationName: string}) {
+function LocationDisplay(props: { locationName: string }) {
     return (
-        <div className='text-black bg-white border border-violet-400 rounded-lg p-10'>
-            <div>Location: {props.locationName}</div>
-            <div>Stamps: 0/11</div>
-            <div className='text-xl text-center'>11%</div>
+      <div
+        className={clsx(
+          "absolute",
+          "top-0",
+          "right-2",
+          "scale-95",
+          "z-20", // ensures it's above the map
+          "flex items-center gap-3 bg-white/90 px-3 py-1.25 rounded-xl shadow-md border border-indigo-200"
+        )}
+        style={{
+          minWidth: 0,
+          maxWidth: 210,
+        }}
+      >
+        <div
+          className="w-8 h-8 flex items-center justify-center rounded-full text-base font-bold bg-indigo-50 text-indigo-600 shadow-sm"
+          aria-hidden
+        >
+          📍
         </div>
-    )
-}
+        <div className="flex flex-col justify-center flex-1 min-w-0">
+          <div className="text-[11px] font-semibold text-indigo-700 truncate">{props.locationName}</div>
+          <div className="text-[10px] text-indigo-400">Stamps: 0/11</div>
+        </div>
+        <div className="text-xs text-indigo-600 font-bold text-center min-w-[2rem]">11%</div>
+      </div>
+    );
+  }
+
 
 
 function LOIMarkers(props: {currentLocationId: number}) {
@@ -150,7 +219,7 @@ function POIMarkers() {
     return (
         <>
             {points.map((poi : POI) => (
-                <POIMarker key={poi.locationId + 0.1 * poi.id} poi={poi} />
+                <POIMarker key={poi.id} poi={poi} />
             ))}
         </>
     )
