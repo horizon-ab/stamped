@@ -51,6 +51,21 @@ export async function getStampsByPoiName(poiName: string) {
     return stamps;
 }
 
+export async function getStampsByUserAndLocation(userName: string, locationName: string) {
+    const db = await getDbConnection();
+    const stamps = await db.all(
+        `SELECT stamps.* 
+         FROM stamps 
+         JOIN users ON stamps.user_name = users.name
+         JOIN locations ON stamps.location_name = locations.name
+         WHERE users.name = ? AND locations.name = ?`,
+        userName,
+        locationName
+    );
+    await db.close();
+    return stamps;
+}
+
 export async function createStamp(
     userName: string,
     challengeName: string,

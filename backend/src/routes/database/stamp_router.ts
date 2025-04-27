@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from 'express';
 import multer from 'multer';
 import exifr from 'exifr';
-import { createStamp, getStamps, getStampsByLocationName, getStampsByPoiName, getStampsByUserName } from '../../queries/stamp';
+import { createStamp, getStamps, getStampsByLocationName, getStampsByPoiName, getStampsByUserAndLocation, getStampsByUserName } from '../../queries/stamp';
 import { getUserByName } from '../../queries/user';
 import { getPointOfInterestByName } from '../../queries/point_of_interest';
 import { getLocationByPoiName } from '../../queries/location';
@@ -66,9 +66,20 @@ router.get('/getByPOI/:poi', async (req: Request, res: Response) => {
     }
 });
 
-
-
-
+router.get('/getByUserAndLocation/:user/:location', async (req: Request, res: Response) => {
+    const { user, location } = req.params; // get the user and location from the request parameters
+    try {
+        const stamps = await getStampsByUserAndLocation(user, location);
+        if (!stamps || stamps.length === 0) {
+            res.status(404).json({ message: 'No stamps found for this user and location.' });
+        } else {
+            res.status(200).json(stamps);
+        }
+    } catch (error) {
+        console.error('Error fetching stamps by user and location:', error);
+        res.status(500).json({ error: error });
+    }
+});
 
 
 interface ExtractedMetadata {
