@@ -30,6 +30,12 @@ const Upload = (props: {poi: POI}) => {
       console.log("Upload called!");
       event.preventDefault();
 
+      const user = localStorage.getItem("stamped-username");
+      if (!user) {
+        alert("Please log in to submit a stamp.");
+        return;
+      }
+
       if (!selectedImage) {
         alert("Please select an image before submitting.");
         return;
@@ -37,7 +43,7 @@ const Upload = (props: {poi: POI}) => {
 
       const formData = new FormData();
       formData.append('image', selectedImage);
-      formData.append('userName', 'Alice'); // TODO: replace with local storage user name
+      formData.append('userName', user); 
       formData.append('poiName', props.poi.name);
 
       try {
@@ -49,6 +55,12 @@ const Upload = (props: {poi: POI}) => {
         if (response.ok) {
           const result = await response.json();
           alert("Successful Submission!");
+        } else if (response.status === 406) {
+          const error = await response.json();
+          alert("Submission out of bounds");
+        } else if (response.status === 408) {
+          const error = await response.json();
+          alert("Challenge verification failed");
         } else {
           const error = await response.json();
           alert("Failed Submission...")

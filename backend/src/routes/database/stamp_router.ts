@@ -139,7 +139,7 @@ router.post('/submitStamp', upload.single('image'), async (req: Request, res: Re
         if (typeof extractedMetadata.location === 'object' && extractedMetadata.location !== null) {
             const { latitude, longitude } = extractedMetadata.location;
             if (Math.sqrt(Math.pow(Number(latitude) - poi.latitude, 2) + Math.pow(Number(longitude) - poi.longitude, 2)) >= 0.001) { // TODO: fine tune number here
-                res.status(404).json({ message: 'Coordinates do not match POI.' });
+                res.status(406).json({ message: 'Coordinates do not match POI.' });
                 return;
             }
         } else {
@@ -149,7 +149,7 @@ router.post('/submitStamp', upload.single('image'), async (req: Request, res: Re
 
         
         if (!(await verifyChallenge(req.file.buffer.toString("base64"), challenge.description))) { // for now always true (so expression always false) for now
-            res.status(404).json({ message: 'Challenge verification failed.' });
+            res.status(408).json({ message: 'Challenge verification failed.' });
             return;
         }
 
