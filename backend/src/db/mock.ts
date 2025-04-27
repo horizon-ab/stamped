@@ -96,8 +96,8 @@ const generateMockData = async () => {
             point_of_interest_name: 'City Hall',
             stamp: '✅ #1',
             datetime: '2024-07-24 10:00:00',
-            photolink: 'https://example.com/alice_capitol.jpg',
-        },
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
+        }, // 
         {
             user_name: 'Bob',
             challenge_name: 'Fountain Photo',
@@ -105,7 +105,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Central Park',
             stamp: '✅ #2',
             datetime: '2024-07-24 12:30:00',
-            photolink: 'https://example.com/bob_fountain.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'Charlie',
@@ -114,7 +114,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Art Museum',
             stamp: '✅ #3',
             datetime: '2024-07-24 15:00:00',
-            photolink: 'https://example.com/charlie_art.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'Alice',
@@ -123,7 +123,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Shopping Mall',
             stamp: '✅ #4',
             datetime: '2024-07-25 09:00:00',
-            photolink: 'https://example.com/alice_mall.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'David',
@@ -132,7 +132,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Old Church',
             stamp: '✅ #5',
             datetime: '2024-07-25 11:00:00',
-            photolink: 'https://example.com/david_church.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'Eve',
@@ -141,7 +141,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Town Square',
             stamp: '✅ #6',
             datetime: '2024-07-25 13:00:00',
-            photolink: 'https://example.com/eve_statue.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'Alice',
@@ -150,7 +150,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Lighthouse',
             stamp: '✅ #7',
             datetime: '2024-07-25 20:00:00',
-            photolink: 'https://example.com/alice_lighthouse.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'Bob',
@@ -159,7 +159,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Fishing Pier',
             stamp: '✅ #8',
             datetime: '2024-07-25 19:30:00',
-            photolink: 'https://example.com/bob_pier.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'Charlie',
@@ -168,7 +168,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Mountain Trailhead',
             stamp: '✅ #9',
             datetime: '2024-07-26 08:00:00',
-            photolink: 'https://example.com/charlie_trail.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'David',
@@ -177,7 +177,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Scenic Overlook',
             stamp: '✅ #10',
             datetime: '2024-07-26 10:00:00',
-            photolink: 'https://example.com/david_scenic.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
     ];
 
