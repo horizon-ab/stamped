@@ -40,7 +40,7 @@ export async function uploadImage(fileBuffer: Buffer, originalName: string) {
 
     console.log('Uploaded File ID:', response.data.id);
     console.log('Public URL:', `https://drive.google.com/uc?id=${response.data.id}`);
-    return response.data.id; 
+    return `https://drive.google.com/uc?id=${response.data.id}`; 
   } catch (error) {
     console.error('Error uploading file to Google Drive:', error);
     throw error;
