@@ -46,7 +46,7 @@ export default function Profile() {
   useEffect(() => {
     if (!username) return;
     setLoading(true);
-
+  
     // Get user info
     fetch(`${API_BASE}/user/${encodeURIComponent(username)}`)
       .then((res) => {
@@ -55,15 +55,21 @@ export default function Profile() {
       })
       .then((data: User) => setUser(data))
       .catch(() => setError("User not found"));
-
-    // Get user's stamps
-    fetch(`${API_BASE}/stamp/getByUser`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: username }),
-    })
+  
+    // Get user's stamps and map to UI-friendly shape
+    fetch(`${API_BASE}/stamp/getByUser/${encodeURIComponent(username)}`)
       .then((res) => res.json())
-      .then((data: Stamp[]) => setUserStamps(data))
+      .then((data) => {
+        const stamps: Stamp[] = data.map((s: any, idx: number) => ({
+          id: s.id ?? idx,
+          name: s.challenge_name ?? "",
+          date: s.datetime ?? "",
+          img: s.photolink ?? "",
+          location: s.location_name ?? "",
+          poi: s.point_of_interest_name ?? "",
+        }));
+        setUserStamps(stamps);
+      })
       .catch(() => setUserStamps([]))
       .finally(() => setLoading(false));
   }, [username]);

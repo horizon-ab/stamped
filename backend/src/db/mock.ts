@@ -137,7 +137,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Central Park',
             stamp: '✅ #2',
             datetime: '2024-07-24 12:30:00',
-            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
+            photolink: 'https://th.bing.com/th/id/OIP.mqaKL-y9JPYO5QiAP8LZ4QHaE8?rs=1&pid=ImgDetMain',
         },
         {
             user_name: 'Charlie',
