@@ -13,11 +13,12 @@ import { Button } from "@/components/ui/button"
 import { useState, useEffect } from 'react'
 import type { POI } from './map_display'
 
-// const API_BASE = "http://localhost:80/api"
-const API_BASE = "back.stamped.photo/api"
+const API_BASE = "http://localhost:80/api"
+// const API_BASE = "back.stamped.photo/api"
 
 const Upload = (props: { poi: POI }) => {
   const [challenge, setChallenge] = useState('');
+  const [challengeName, setChallengeName] = useState('');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false); // State to control dialog visibility
 
@@ -39,6 +40,7 @@ const Upload = (props: { poi: POI }) => {
             description: string;
           };
           setChallenge(challengeInfo.description);
+          setChallengeName(challengeInfo.name)
         } else {
           setChallenge("Take a selfie with the first thing you see!");
         }
@@ -112,7 +114,7 @@ const Upload = (props: { poi: POI }) => {
         <DialogHeader>
           <DialogTitle>Upload</DialogTitle>
           <DialogDescription>
-            Challenge: {challenge}
+            Challenge - {challengeName} - {challenge}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">

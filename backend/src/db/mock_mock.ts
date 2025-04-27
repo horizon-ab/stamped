@@ -66,7 +66,7 @@ const generateMockData = async () => {
 
   // Insert sample challenges
   const challengesData = [
-    { poi_name: 'Pauley Pavilion', name: 'Hackathon', description: 'Code for LA Hacks 2025!' },
+    { poi_name: 'Pauley Pavilion', name: 'Hackathon Judging', description: 'Take a selfie with the students you\'re judging!' },
     { poi_name: 'Bruin Bear', name: 'Beary Nice', description: 'Make a bear pose with the bear.' },
     { poi_name: 'Powell Library', name: 'Midnight Escapades', description: 'Study in the library any time from 12:00 AM to 6 AM.' },
     { poi_name: 'Inverted Fountain', name: 'On your Toes', description: 'Get as close to the inverted fountain as possible without touching it.' },
