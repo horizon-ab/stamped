@@ -150,6 +150,7 @@ function LocationDisplay(props: { locationName: string }) {
     const [locationStamps, setLocationStamps] = useState(0);
 
     useEffect(() => {
+        console.log("Changed detected")
         const fetchUserStamps = async () => {
             try {
                 const user = localStorage.getItem("stamped-username")
@@ -164,6 +165,7 @@ function LocationDisplay(props: { locationName: string }) {
 
                 if (userStampsResponse.ok) {
                     const userStampsInfo = await userStampsResponse.json() as Stamp[];
+                    console.log("Successful User Stamps: " + userStampsInfo)
                     setUserStamps(userStampsInfo.length);
                 } else {
                     console.log("Fetching stamps by username error.")
@@ -181,6 +183,7 @@ function LocationDisplay(props: { locationName: string }) {
 
                 if (locationStampsResponse.ok) {
                     const locationStampsInfo = await locationStampsResponse.json() as Stamp[];
+                    console.log("Successful Location Stamps: " + locationStampsInfo)
                     setLocationStamps(locationStampsInfo.length);
                 } else {
                     console.log("Fetching stamps by location error.")
@@ -190,7 +193,10 @@ function LocationDisplay(props: { locationName: string }) {
             }
         };
 
-    }, []);
+        fetchUserStamps();
+        fetchLocationStamps();
+
+    }, [props.locationName]);
 
 
     return (
