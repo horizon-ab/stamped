@@ -32,12 +32,12 @@ var locations: LOI[] = []
 var points: POI[] = []
 
 try {
-    const locationsResponse = await fetch('http://localhost:3000/api/location/', {
+    const locationsResponse = await fetch('http://localhost:80/api/location/', {
           method: 'GET',
           mode: "no-cors"
         })
     
-    const poiResponse = await fetch('http://localhost:3000/api/poi/', {
+    const poiResponse = await fetch('http://localhost:80/api/poi/', {
         method: 'GET',
         mode: "no-cors"
         })
