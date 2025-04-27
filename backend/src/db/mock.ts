@@ -135,6 +135,15 @@ const generateMockData = async () => {
             photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
+            user_name: 'Dylan',
+            challenge_name: 'Bell Tower View',
+            location_name: 'Historic District',
+            point_of_interest_name: 'Old Church',
+            stamp: '✅ #5',
+            datetime: '2024-07-25 12:00:00',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
+        },
+        {
             user_name: 'Eve',
             challenge_name: 'Statue Pose',
             location_name: 'Historic District',
