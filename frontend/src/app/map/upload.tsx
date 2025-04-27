@@ -1,4 +1,4 @@
-// @ts-nocheck
+/* eslint-disable */
 import {
   Dialog,
   DialogContent,

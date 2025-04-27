@@ -1,4 +1,4 @@
-// @ts-nocheck
+/* eslint-disable */
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
