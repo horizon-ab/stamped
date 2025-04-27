@@ -3,17 +3,19 @@ import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-// LocalStorage-based authy hook
-function useAuth() {
+// New API-based authentication logic
+function useAuthAPI() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
 
-  // On mount, check localStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const user = localStorage.getItem("stamped-username");
-      setLoggedIn(!!user);
-      setUsername(user);
+      // Prefer sessionStorage for session login, fallback to localStorage for profile compatibility
+      const user = sessionStorage.getItem("stamped-username") || localStorage.getItem("stamped-username");
+      if (user) {
+        setUsername(user);
+        setLoggedIn(true);
+      }
     }
   }, []);
 
@@ -21,7 +23,8 @@ function useAuth() {
     setUsername(user);
     setLoggedIn(true);
     if (typeof window !== "undefined") {
-      localStorage.setItem("stamped-username", user);
+      sessionStorage.setItem("stamped-username", user);
+      localStorage.setItem("stamped-username", user); // For profile page compatibility
     }
   };
 
@@ -29,6 +32,7 @@ function useAuth() {
     setUsername(null);
     setLoggedIn(false);
     if (typeof window !== "undefined") {
+      sessionStorage.removeItem("stamped-username");
       localStorage.removeItem("stamped-username");
     }
   };
@@ -68,22 +72,27 @@ function useCurrentPosition() {
   return { position, error };
 }
 
+const API_BASE = "http://localhost:80/api/user";
+
 const Home: React.FC = () => {
   const { position, error } = useCurrentPosition();
   const [isExpanding, setIsExpanding] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // Auth logic
-  const { loggedIn, username, login, logout } = useAuth();
+  // Auth logic (API-based)
+  const { loggedIn, username, login, logout } = useAuthAPI();
   const [showLoginForm, setShowLoginForm] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState<string | null>(null);
+  const [creatingUser, setCreatingUser] = useState(false);
+  const [createUserError, setCreateUserError] = useState<string | null>(null);
 
   // Responsive: use window width (max 360px), keep 5:6 aspect ratio
   const [mapWidth, setMapWidth] = useState(320);
-  React.useEffect(() => {
+  useEffect(() => {
     function handleResize() {
       const w = Math.min(window.innerWidth - 32, 360); // 16px padding each side
       setMapWidth(w > 240 ? w : 240);
@@ -103,19 +112,37 @@ const Home: React.FC = () => {
 
   const expandedMapSize = "640x640";
 
-  function handleLoginSubmit(e: React.FormEvent) {
+  // Login handler
+  async function handleLoginSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!loginUsername || !loginPassword) {
       setLoginError("Please enter both username and password.");
       return;
     }
     setLoginError(null);
-    login(loginUsername);
-    setShowLoginForm(false);
-    setLoginUsername("");
-    setLoginPassword("");
+
+    // Check if user exists
+    try {
+      const res = await fetch(`${API_BASE}/${encodeURIComponent(loginUsername)}`);
+      if (res.status === 404) {
+        setLoginError("User not found.");
+        return;
+      }
+      if (!res.ok) {
+        setLoginError("API error, please try again.");
+        return;
+      }
+      const user = await res.json();
+      login(user.name);
+      setShowLoginForm(false);
+      setLoginUsername("");
+      setLoginPassword("");
+    } catch (err) {
+      setLoginError("Server error. Try again.");
+    }
   }
 
+  // Logout handler
   function handleLogout() {
     logout();
     setShowLoginForm(false);
@@ -123,7 +150,9 @@ const Home: React.FC = () => {
 
   function handleLoginClick() {
     setShowLoginForm(true);
+    setShowCreateForm(false);
     setLoginError(null);
+    setCreateUserError(null);
     setLoginUsername("");
     setLoginPassword("");
   }
@@ -133,6 +162,53 @@ const Home: React.FC = () => {
     setLoginError(null);
     setLoginUsername("");
     setLoginPassword("");
+  }
+
+  function handleCreateAccountClick() {
+    setShowCreateForm(true);
+    setShowLoginForm(false);
+    setCreateUserError(null);
+    setLoginUsername("");
+    setLoginPassword("");
+  }
+
+  function handleExitCreateForm() {
+    setShowCreateForm(false);
+    setCreateUserError(null);
+    setLoginUsername("");
+    setLoginPassword("");
+  }
+
+  async function handleCreateAccountSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!loginUsername || !loginPassword) {
+      setCreateUserError("Please enter both username and password.");
+      return;
+    }
+    setCreateUserError(null);
+    setCreatingUser(true);
+
+    try {
+      const res = await fetch(`${API_BASE}/sign-in`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: loginUsername }),
+      });
+      if (!res.ok) {
+        setCreateUserError("Failed to create account. Try another username.");
+        setCreatingUser(false);
+        return;
+      }
+      const user = await res.json();
+      login(user.name);
+      setShowCreateForm(false);
+      setLoginUsername("");
+      setLoginPassword("");
+    } catch (err) {
+      setCreateUserError("Server error. Try again.");
+    } finally {
+      setCreatingUser(false);
+    }
   }
 
   return (
@@ -274,18 +350,27 @@ const Home: React.FC = () => {
           </li>
         </ul>
 
-        {/* Login/Logout section with original margin and no fixed position */}
-        {!loggedIn && !showLoginForm && (
-          <button
-            className="rounded-lg px-6 py-3 w-full font-semibold text-white shadow transition-all bg-indigo-600 hover:bg-indigo-700 active:scale-95 animate-fadeInUp mt-5"
-            onClick={handleLoginClick}
-          >
-            Log in
-          </button>
+        {/* Login/Logout/Create Account Section */}
+        {!loggedIn && !showLoginForm && !showCreateForm && (
+          <div className="w-full flex flex-col items-center gap-2">
+            <button
+              className="rounded-lg px-6 py-3 w-full font-semibold text-white shadow transition-all bg-indigo-600 hover:bg-indigo-700 active:scale-95 animate-fadeInUp mt-5"
+              onClick={handleLoginClick}
+            >
+              Log in
+            </button>
+            <button
+              className="rounded-lg px-6 py-2 w-full font-semibold text-indigo-700 shadow transition-all bg-indigo-100 hover:bg-indigo-200 active:scale-95 animate-fadeInUp"
+              onClick={handleCreateAccountClick}
+            >
+              Create account
+            </button>
+          </div>
         )}
+
+        {/* Login Modal */}
         {!loggedIn && showLoginForm && (
           <div className="relative w-full flex flex-col items-center animate-fadeInUp mt-2">
-            {/* Exit button */}
             <button
               onClick={handleExitLoginForm}
               className="absolute right-0.5 top-0 text-indigo-400 hover:text-indigo-700 text-xl font-bold transition-colors"
@@ -298,7 +383,6 @@ const Home: React.FC = () => {
             <form
               onSubmit={handleLoginSubmit}
               className="flex flex-col gap-2 w-full bg-white/90 p-4 rounded-xl shadow"
-              style={{ animationDelay: "0.1s" }}
             >
               <input
                 type="text"
@@ -328,13 +412,76 @@ const Home: React.FC = () => {
               )}
               <div className="text-xs text-center text-indigo-600 mt-1">
                 Not registered?{" "}
-                <a href="#" className="underline hover:text-indigo-800">
+                <button
+                  type="button"
+                  className="underline hover:text-indigo-800"
+                  onClick={handleCreateAccountClick}
+                >
                   Create account
-                </a>
+                </button>
               </div>
             </form>
           </div>
         )}
+
+        {/* Create Account Modal */}
+        {!loggedIn && showCreateForm && (
+          <div className="relative w-full flex flex-col items-center animate-fadeInUp mt-2">
+            <button
+              onClick={handleExitCreateForm}
+              className="absolute right-0.5 top-0 text-indigo-400 hover:text-indigo-700 text-xl font-bold transition-colors"
+              aria-label="Exit create account form"
+              type="button"
+              tabIndex={0}
+            >
+              ×
+            </button>
+            <form
+              onSubmit={handleCreateAccountSubmit}
+              className="flex flex-col gap-2 w-full bg-white/90 p-4 rounded-xl shadow"
+            >
+              <input
+                type="text"
+                className="rounded-md border px-3 py-2 text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                placeholder="Username"
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
+                autoFocus
+              />
+              <input
+                type="password"
+                className="rounded-md border px-3 py-2 text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                placeholder="Password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+              />
+              <button
+                type="submit"
+                className="rounded-md bg-indigo-600 text-white font-semibold py-2 mt-1 hover:bg-indigo-700 transition disabled:opacity-60"
+                disabled={creatingUser}
+              >
+                {creatingUser ? "Creating..." : "Create account"}
+              </button>
+              {createUserError && (
+                <div className="text-xs text-red-500 text-center">
+                  {createUserError}
+                </div>
+              )}
+              <div className="text-xs text-center text-indigo-600 mt-1">
+                Already registered?{" "}
+                <button
+                  type="button"
+                  className="underline hover:text-indigo-800"
+                  onClick={handleLoginClick}
+                >
+                  Log in
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* Logout */}
         {loggedIn && (
           <button
             className="rounded-lg px-6 py-3 w-full font-semibold text-white shadow transition-all bg-indigo-600 hover:bg-indigo-700 active:scale-95 animate-fadeInUp mt-2"
@@ -355,7 +502,6 @@ const Home: React.FC = () => {
           by Stamped
         </span>
       </footer>
-
       {/* Animations */}
       <style jsx global>{`
         @keyframes fadeIn {
@@ -527,4 +673,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Home; 

@@ -5,8 +5,11 @@ const initializeDatabase = async () => {
 
     await db.exec(`
         CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name VARCHAR(255) NOT NULL UNIQUE
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE,
+            bio TEXT,
+            joined TEXT,
+            avatar TEXT
         );
     `);
 
