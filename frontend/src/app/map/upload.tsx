@@ -37,12 +37,13 @@ const Upload = (props: {poi: POI}) => {
 
       const formData = new FormData();
       formData.append('image', selectedImage);
+      formData.append('userName', 'Alice'); // TODO: replace with local storage user name
+      formData.append('poiName', props.poi.name);
 
       try {
-        const response = await fetch('http://localhost:3000/api/google-drive/upload-photo', {
+        const response = await fetch('http://localhost:80/api/stamp/submitStamp', {
           method: 'POST',
           body: formData,
-          mode: "no-cors"
         })
 
         if (response.ok) {
@@ -61,7 +62,7 @@ const Upload = (props: {poi: POI}) => {
     return(
         <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Upload</Button>
+        <Button variant="outline">Challenge</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

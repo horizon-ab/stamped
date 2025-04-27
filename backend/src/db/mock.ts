@@ -27,6 +27,7 @@ const generateMockData = async () => {
         { name: 'Historic District', description: 'Full of old buildings and landmarks.', latitude: 34.0450, longitude: -118.2350 },
         { name: 'Seaside Marina', description: 'A beautiful area by the ocean.', latitude: 33.9500, longitude: -118.4000 },
         { name: 'Mountain View Estates', description: 'A quiet suburban area.', latitude: 34.1000, longitude: -118.1500 },
+        { name: "UCLA", description: "#1 Public University",  latitude : 34.0722, longitude : -118.4427},
     ];
     for (const location of locations) {
         await db.run(
@@ -47,6 +48,7 @@ const generateMockData = async () => {
         { location_name: 'Seaside Marina', name: 'Fishing Pier', description: 'A place for fishing and views.', latitude: 33.9450, longitude: -118.3950 },
         { location_name: 'Mountain View Estates', name: 'Mountain Trailhead', description: 'Start of a hiking trail.', latitude: 34.1050, longitude: -118.1450 },
         { location_name: 'Mountain View Estates', name: 'Scenic Overlook', description: 'A place with a great view.', latitude: 34.0950, longitude: -118.1550 },
+        { location_name: 'UCLA', name: "Pauley Pavilion", description: "Big ass pavilion!", latitude: 34.070211, longitude: -118.446775}
     ];
     for (const poi of pointsOfInterest) {
         await db.run(
@@ -67,6 +69,7 @@ const generateMockData = async () => {
         { poi_name: 'Fishing Pier', name: 'Sunset Pier Photo', description: 'Take a photo of the sunset from the pier.' },
         { poi_name: 'Mountain Trailhead', name: 'Trailhead Marker', description: 'Photograph the start of the trail.' },
         { poi_name: 'Scenic Overlook', name: 'Panoramic View', description: 'Capture a panoramic photo of the view.' },
+        { poi_name: 'Pauley Pavilion', name: 'Hackathon', description: 'Code for LA Hacks 2025!' },
     ];
     for (const challenge of challenges) {
         await db.run(
@@ -125,8 +128,8 @@ const generateMockData = async () => {
             point_of_interest_name: 'City Hall',
             stamp: '✅ #1',
             datetime: '2024-07-24 10:00:00',
-            photolink: 'https://example.com/alice_capitol.jpg',
-        },
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
+        }, // 
         {
             user_name: 'Bob',
             challenge_name: 'Fountain Photo',
@@ -134,7 +137,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Central Park',
             stamp: '✅ #2',
             datetime: '2024-07-24 12:30:00',
-            photolink: 'https://example.com/bob_fountain.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'Charlie',
@@ -143,7 +146,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Art Museum',
             stamp: '✅ #3',
             datetime: '2024-07-24 15:00:00',
-            photolink: 'https://example.com/charlie_art.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'Alice',
@@ -152,7 +155,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Shopping Mall',
             stamp: '✅ #4',
             datetime: '2024-07-25 09:00:00',
-            photolink: 'https://example.com/alice_mall.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'David',
@@ -161,7 +164,16 @@ const generateMockData = async () => {
             point_of_interest_name: 'Old Church',
             stamp: '✅ #5',
             datetime: '2024-07-25 11:00:00',
-            photolink: 'https://example.com/david_church.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
+        },
+        {
+            user_name: 'Dylan',
+            challenge_name: 'Bell Tower View',
+            location_name: 'Historic District',
+            point_of_interest_name: 'Old Church',
+            stamp: '✅ #5',
+            datetime: '2024-07-25 12:00:00',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'Eve',
@@ -170,7 +182,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Town Square',
             stamp: '✅ #6',
             datetime: '2024-07-25 13:00:00',
-            photolink: 'https://example.com/eve_statue.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'Alice',
@@ -179,7 +191,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Lighthouse',
             stamp: '✅ #7',
             datetime: '2024-07-25 20:00:00',
-            photolink: 'https://example.com/alice_lighthouse.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'Bob',
@@ -188,7 +200,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Fishing Pier',
             stamp: '✅ #8',
             datetime: '2024-07-25 19:30:00',
-            photolink: 'https://example.com/bob_pier.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'Charlie',
@@ -197,7 +209,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Mountain Trailhead',
             stamp: '✅ #9',
             datetime: '2024-07-26 08:00:00',
-            photolink: 'https://example.com/charlie_trail.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
         {
             user_name: 'David',
@@ -206,7 +218,7 @@ const generateMockData = async () => {
             point_of_interest_name: 'Scenic Overlook',
             stamp: '✅ #10',
             datetime: '2024-07-26 10:00:00',
-            photolink: 'https://example.com/david_scenic.jpg',
+            photolink: 'https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU',
         },
     ];
 

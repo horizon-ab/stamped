@@ -28,3 +28,23 @@ export async function verifyChallenge(image: Buffer, challenge: string) { // tem
 
     return true; // TODO: if we decide to have verify challenge, we can use this function
 }
+
+
+
+export async function generateStampName(image: Buffer, poi: string, challenge: string) {
+    const prompt = `Point Of Interest: ${poi}\nChallenge: ${challenge}\n\ncreate a funny quirky stamp name that reflects the image submission and the challenge it attempted to fulfill at the point of interest`;
+    const model =  "gemini-2.0-flash";
+
+    const imagePart = {
+        inlineData: {
+            data: Buffer.from(image).toString('base64'),
+            mimeType: "image/jpeg", // Or the appropriate MIME type of your image
+        },
+    };
+
+    const response = await ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: "generate a challenge for this " + poi + " that uniquely captures the essence of the location and is fun to do. The challenge should be a single sentence and should be something that can be done in 5 minutes or less. The challenge should be unique to this location and not something generic like 'take a picture'. return the challenge as a JSON object with a challenge name and a description of how to complete the challenge. The acceptance criteria in the description should be specific and measurable.",
+    });
+    return response.text;
+}

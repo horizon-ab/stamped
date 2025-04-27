@@ -36,8 +36,8 @@ export async function getLocationByPoiName(poiName: string) {
     const location = await db.all(
         `SELECT locations.* 
          FROM locations 
-         JOIN points_of_interest ON locations.id = points_of_interest.location_id 
-         WHERE points_of_interest.name = ?`,
+         JOIN point_of_interests ON locations.name = point_of_interests.location_name 
+         WHERE point_of_interests.name = ?`,
         poiName
     );
     await db.close();

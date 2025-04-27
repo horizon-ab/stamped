@@ -9,8 +9,8 @@ router.get('/', async (req: Request, res: Response) => {
     res.json(locations);
 });
 
-router.get('/getByUser', async (req: Request, res: Response) => {
-    const { name } = req.body; 
+router.get('/getByUser/:user', async (req: Request, res: Response) => {
+    const { name } = req.params; 
     
     try {
         const location = await getLocationByUserStamps(name);

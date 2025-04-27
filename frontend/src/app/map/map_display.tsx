@@ -25,6 +25,15 @@ const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAP_ID;
 
 export type LOI = { id : number, name : string, location: google.maps.LatLngLiteral }
 export type POI = { id : number, locationName : string, name : string, description : string, location: google.maps.LatLngLiteral } 
+export type Stamp = { id : number,
+    user_name : string, 
+    challenge_name : string, 
+    location_name : string, 
+    point_of_interest_name : string, 
+    stamp : string,
+    datetime : string,
+    photolink : string
+}
 
 var locations: LOI[] = []
 var points: POI[] = []
@@ -78,20 +87,12 @@ try {
 //     {id: 3, name: "Hollywood", location: { lat: 34.0907, lng: -118.3266}},
 //     {id: 4, name: "Malibu", location: { lat: 34.0381, lng: -118.6923}},
 //     {id: 5, name: "Silver Lake", location: { lat: 34.0829, lng: -118.2733}}
+//      Bear, Inverted Fountain, Wooden Statue
 // ]
 
 // points: POI[] = [
 //     {id: 1, locationId: 1, name: "Pauley Pavilion", description: "Code for a hackathon!", location: {lat: 34.070211, lng: -118.446775}}
 // ]
-
-const images: string[] = [
-    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
-    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
-    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
-    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
-    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
-    "https://drive.google.com/thumbnail?sz=w640&id=1NoM7_m0Eruab87d2qJYgZOxbYGd5XUHU",
-]
 
 const MapDisplay = () => {
     const [showLocationDisplay, setShowLocationDisplay] = useState(false);
@@ -141,7 +142,6 @@ const MapDisplay = () => {
         
     )
 }
-
 
 // TODO: make it so that it fetches from the DB using location id instead
 function LocationDisplay(props: { locationName: string }) {
@@ -251,47 +251,74 @@ function POIMarker(props: {poi: POI}) {
     )
 }
 
-function POIDisplay(props: {poi: POI}) {
+function POIDisplay(props: { poi: POI }) {
+    var poi = props.poi;
+    const [data, setData] = useState<Stamp[]>([]);
+    const [dataExists, setDataExists] = useState(false);
 
-    try {
+    useEffect(() => {
+        const fetchStamps = async () => {
+            try {
+                const stampsResponse = await fetch('http://localhost:80/api/stamp/getByPOI/' + poi.name, {
+                    method: 'GET',
+                });
+                console.log('Successful stamps fetch.');
+                const stampsInfo = (await stampsResponse.json()) as {
+                    id: number;
+                    user_name: string;
+                    challenge_name: string;
+                    location_name: string;
+                    point_of_interest_name: string;
+                    stamp: string;
+                    datetime: string;
+                    photolink: string;
+                }[];
+                setData(stampsInfo || []);
+                setDataExists(stampsInfo.length > 0);
+            } catch (error) {
+                console.log('Error in fetching stamps.', error);
+                setData([]);
+                setDataExists(false);
+            }
+        };
 
-    } catch {
-        
-    }
+        fetchStamps(); // Call the async function
+    }, []); // Empty dependency array ensures this runs only once
 
-    return(
-        <div className='flex flex-col text-black gap-4'>
-            <div className='font-bold text-xl'>{props.poi.name}</div>
+    return (
+        <div className="flex flex-col text-black gap-4">
+            <div className="font-bold text-xl text-center">{props.poi.name}</div>
             <Carousel
                 opts={{
-                    align: "center",
+                    align: 'center',
                     loop: true,
-                    dragFree: true
-                  }}
-                
+                    dragFree: true,
+                }}
             >
                 <CarouselContent>
-                    {images.map((image, index) => (
-                        <CarouselItem key={index} className='overflow-hidden basis-1/2'>
+                    {dataExists && data.map((stamp, index) => (
+                        <CarouselItem key={index} className="overflow-hidden basis-1/2">
                             <div className="relative w-full h-20">
                                 <Image
-                                    src={image}
-                                    alt={image}
+                                    src={stamp.photolink}
+                                    alt={stamp.challenge_name}
                                     fill
                                     style={{ objectFit: 'cover' }}
                                     className="rounded-lg"
                                 />
                             </div>
                         </CarouselItem>
-                    ))
-
+                    ))}
+                    {!dataExists && <div className='text-center text-xl p-5'>
+                        Be the first to be Stamped!
+                    </div>
                     }
                 </CarouselContent>
             </Carousel>
-            <div className='text-center'>{props.poi.description}</div>
+            <div className="text-center">{props.poi.description}</div>
             <Upload poi={props.poi} />
         </div>
-    )
+    );
 }
 
 export default MapDisplay;
