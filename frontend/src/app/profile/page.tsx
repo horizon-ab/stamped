@@ -173,25 +173,30 @@ export default function Profile() {
           <span>My Stamps</span>
           <span className="text-xs text-indigo-400">({userStamps.length})</span>
         </h3>
-        {userStamps.length === 0 ? (
-          <div className="text-indigo-400 text-center text-sm">No stamps collected yet.</div>
-        ) : (
-          <div className="grid grid-cols-2 gap-4">
-            {userStamps.map((stamp) => (
-              <div
-                key={stamp.id}
-                className="bg-white rounded-xl shadow flex flex-col items-center p-2 animate-popIn"
-              >
-                <img
-                  src={stamp.img}
-                  alt="Stamp"
-                  className="w-20 h-20 object-cover rounded-lg mb-1 border-2 border-indigo-200"
-                />
-                <div className="text-xs text-indigo-700 font-semibold">{stamp.poi}</div>
-                <div className="text-[11px] text-indigo-400">{new Date(stamp.date).toLocaleDateString()}</div>
-                <div className="text-[10px] text-indigo-300">{stamp.location}</div>
-              </div>
-            ))}
+        <div className="grid grid-cols-2 gap-2.5">
+          {userStamps.map((stamp, i) => (
+            <div
+              key={stamp.id}
+              className="flex flex-col items-center bg-white rounded-lg p-2 shadow hover:scale-103 transition-transform animate-popIn3"
+              style={{ animationDelay: `${i * 0.1 + 0.5}s` }}
+            >
+              <img
+                src={stamp.img}
+                alt={stamp.name}
+                className="w-14 h-14 rounded-md object-cover mb-1"
+              />
+              <span className="text-xs text-indigo-700 font-semibold">
+                {stamp.name}
+              </span>
+              <span className="text-[10px] text-indigo-400">
+                {new Date(stamp.date).toLocaleDateString()}
+              </span>
+            </div>
+          ))}
+        </div>
+        {userStamps.length === 0 && (
+          <div className="text-indigo-400 text-center mt-8 text-sm animate-fadeInSlow">
+            No stamps collected yet. Start your journey!
           </div>
         )}
       </section>
@@ -210,6 +215,10 @@ export default function Profile() {
           70% { transform: scale(1.15); opacity: 1; }
           100% { transform: scale(1); }
         }
+        @keyframes popIn3 {
+          0% { opacity: 0; transform: scale(0.8);}
+          100% { opacity: 1; transform: scale(1);}
+        }
         @keyframes heartBeat {
           0%, 100% { transform: scale(1); }
           40% { transform: scale(1.3); }
@@ -217,9 +226,11 @@ export default function Profile() {
           80% { transform: scale(1.1); }
         }
         .animate-popIn { animation: popIn 0.7s both; }
+        .animate-popIn3 { animation: popIn3 0.7s both; }
         .animate-heartBeat { animation: heartBeat 1.5s infinite; }
         .animate-fadeIn { animation: fadeIn 0.7s both;}
         .animate-fadeInUp { animation: fadeInUp 0.7s both;}
+        .animate-fadeInSlow { animation: fadeIn 1.5s both;}
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(16px);}
           to { opacity: 1; transform: translateY(0);}
