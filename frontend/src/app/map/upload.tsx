@@ -39,10 +39,9 @@ const Upload = (props: {poi: POI}) => {
       formData.append('image', selectedImage);
 
       try {
-        const response = await fetch('http://localhost:3000/api/google-drive/upload-photo', {
+        const response = await fetch('http://localhost:80/api/google-drive/upload-photo', {
           method: 'POST',
           body: formData,
-          mode: "no-cors"
         })
 
         if (response.ok) {
