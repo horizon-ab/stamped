@@ -19,8 +19,6 @@ import { Circle } from './circle'
 import Upload from './upload'
   
 
-// TODO: create utils folder with functions, import and fetch LOIs from the database
-
 dotenv.config();
 const key = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
 const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAP_ID;
@@ -32,14 +30,12 @@ var locations: LOI[] = []
 var points: POI[] = []
 
 try {
-    const locationsResponse = await fetch('http://localhost:3000/api/location/', {
+    const locationsResponse = await fetch('http://localhost:80/api/location/', {
           method: 'GET',
-          mode: "no-cors"
         })
     
-    const poiResponse = await fetch('http://localhost:3000/api/poi/', {
+    const poiResponse = await fetch('http://localhost:80/api/poi/', {
         method: 'GET',
-        mode: "no-cors"
         })
 
     if (locationsResponse.ok) {
@@ -121,8 +117,6 @@ const MapDisplay = () => {
         setCurrentLocation('');
         setCurrentLocationId(-1)
     }, [])
-
-    // TODO: LocationDisplay needs to update after one of its props changes
 
     return(
         <div className='relative w-full'>
@@ -258,6 +252,12 @@ function POIMarker(props: {poi: POI}) {
 }
 
 function POIDisplay(props: {poi: POI}) {
+
+    try {
+
+    } catch {
+        
+    }
 
     return(
         <div className='flex flex-col text-black gap-4'>
