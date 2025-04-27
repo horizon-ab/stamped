@@ -269,8 +269,7 @@ function POIDisplay(props: { poi: POI }) {
     useEffect(() => {
         const fetchStamps = async () => {
             try {
-                const stampsResponse = await fetch('http://localhost:80/api/stamp/getByPOI', {
-                    body: JSON.stringify({ poi: poi.name }),
+                const stampsResponse = await fetch('http://localhost:80/api/stamp/getByPOI/' + poi.name, {
                     method: 'GET',
                 });
                 console.log('Successful stamps fetch.');
