@@ -4,7 +4,7 @@ const { Readable } = require('stream');
 const mime = require('mime-types');
 
 const auth = new google.auth.GoogleAuth({
-  keyFile: path.join(__dirname, 'stamped-458002-22af2e382a01.json'), // service account file, note in gitignore so get from Don
+  keyFile: path.join(__dirname, '..', '..', 'stamped-458002-22af2e382a01.json'), // service account file, note in gitignore so get from Don
   scopes: ['https://www.googleapis.com/auth/drive'],
 });
 
