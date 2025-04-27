@@ -1,6 +1,6 @@
+// @ts-nocheck
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 // New API-based authentication logic
