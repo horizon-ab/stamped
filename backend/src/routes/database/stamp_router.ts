@@ -6,7 +6,7 @@ import { getUserByName } from '../../queries/user';
 import { getPointOfInterestByName } from '../../queries/point_of_interest';
 import { getLocationByPoiName } from '../../queries/location';
 import { getChallengeByPoiName } from '../../queries/challenge';
-import { verifyChallenge } from '../../apis/gemini';
+import { verifyChallenge, generateStampName } from '../../apis/gemini';
 import { uploadImage } from '../../apis/google-drive';
 
 const router: Router = express.Router();
@@ -148,7 +148,7 @@ router.post('/submitStamp', upload.single('image'), async (req: Request, res: Re
         }
 
         
-        if (!(await verifyChallenge(req.file.buffer, challenge.description))) { // for now always true (so expression always false) for now
+        if (!(await verifyChallenge(req.file.buffer.toString("base64"), challenge.description))) { // for now always true (so expression always false) for now
             res.status(404).json({ message: 'Challenge verification failed.' });
             return;
         }
@@ -158,13 +158,14 @@ router.post('/submitStamp', upload.single('image'), async (req: Request, res: Re
         const url = await uploadImage(req.file.buffer, req.file.originalname);
         console.log(`Successfully uploaded ${req.file.originalname}.`);
 
+        const stampName = await generateStampName(req.file.buffer.toString("base64"), poiName, challenge.name);
 
         const result = await createStamp(
             userName,
             challenge.name,
             location[0].name,
             poiName,
-            "Stamp for " + challenge.name,
+            stampName,
             url
         )
             
@@ -187,3 +188,4 @@ router.post('/submitStamp', upload.single('image'), async (req: Request, res: Re
 });
 
 export default router;
+
