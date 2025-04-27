@@ -145,6 +145,54 @@ const MapDisplay = () => {
 
 // TODO: make it so that it fetches from the DB using location id instead
 function LocationDisplay(props: { locationName: string }) {
+
+    const [userStamps, setUserStamps] = useState(0);
+    const [locationStamps, setLocationStamps] = useState(0);
+
+    useEffect(() => {
+        const fetchUserStamps = async () => {
+            try {
+                const user = localStorage.getItem("stamped-username")
+                if (!user) {
+                    alert("Please log in to submit a stamp.");
+                    return;
+                } 
+
+                const userStampsResponse = await fetch('http://localhost:80/api/stamp/getByUser/' + user, {
+                    method: 'GET',
+                });
+
+                if (userStampsResponse.ok) {
+                    const userStampsInfo = await userStampsResponse.json() as Stamp[];
+                    setUserStamps(userStampsInfo.length);
+                } else {
+                    console.log("Fetching stamps by username error.")
+                }
+            } catch (error) {
+                console.log("Error occurred: " + error)
+            }
+        };
+
+        const fetchLocationStamps = async () => {
+            try {
+                const locationStampsResponse = await fetch('http://localhost:80/api/stamp/getByLocation/' + props.locationName, {
+                    method: 'GET',
+                })
+
+                if (locationStampsResponse.ok) {
+                    const locationStampsInfo = await locationStampsResponse.json() as Stamp[];
+                    setLocationStamps(locationStampsInfo.length);
+                } else {
+                    console.log("Fetching stamps by location error.")
+                }
+            } catch (error) {
+                console.log("Error occurred: " + error);
+            }
+        };
+
+    }, []);
+
+
     return (
       <div
         className={clsx(
@@ -168,9 +216,9 @@ function LocationDisplay(props: { locationName: string }) {
         </div>
         <div className="flex flex-col justify-center flex-1 min-w-0">
           <div className="text-[11px] font-semibold text-indigo-700 truncate">{props.locationName}</div>
-          <div className="text-[10px] text-indigo-400">Stamps: 0/11</div>
+          <div className="text-[10px] text-indigo-400">{'Stamps: ' + userStamps + '/' + locationStamps }</div>
         </div>
-        <div className="text-xs text-indigo-600 font-bold text-center min-w-[2rem]">11%</div>
+        <div className="text-xs text-indigo-600 font-bold text-center min-w-[2rem]">{(userStamps / locationStamps * 100).toFixed(1) + '%'}</div>
       </div>
     );
   }
