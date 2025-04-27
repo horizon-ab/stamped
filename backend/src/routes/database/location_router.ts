@@ -5,6 +5,7 @@ const router: Router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
     const locations = await getLocations();
+    console.log('Locations:', locations);
     res.json(locations);
 });
 
