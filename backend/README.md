@@ -19,6 +19,8 @@ All data in routers, stamp is the only confusing one, the rest are straight forw
 
 Note: names are the only ids used in the database, so simplifies queries; this would be a security no go under real life but hey its okay
 
+All Get alls return a json object with an array of json objects
+
 - `/api/user/` - GET all users
 - `/api/user/:name` - GET user by name
 - `/api/user/sign-in` - POST sign in a user, if a user exists already, it will return the user, if not, it will create a new user (scuffed way to handle both LOL), pass in nae into body
