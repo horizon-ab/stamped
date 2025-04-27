@@ -15,4 +15,25 @@ To initialize the database, run the following command: `npm run db:init`
 Make sure you have ts-node installed globally. You can install it by running `npm install -g ts-node`.
 
 ### API End Points Usage
-All data in routers, stamp is the only confusing one, the rest are straight forward basic get requests
+All data in routers, stamp is the only confusing one, the rest are straight forward basic get requests.
+
+Note: names are the only ids used in the database, so simplifies queries; this would be a security no go under real life but hey its okay
+
+- `/api/user/` - GET all users
+- `/api/user/:name` - GET user by name
+- `/api/user/sign-in` - POST sign in a user, if a user exists already, it will return the user, if not, it will create a new user (scuffed way to handle both LOL), pass in nae into body
+
+- `/api/stamp/` - GET all stamps
+- `/api/stamp/getByUser` - GET all stamps by user, pass in name into body
+- `/api/stamp/getByLocation` - GET all stamps by location, pass in location into body
+- `/api/stamp/getByPOI` - GET all stamps by place of interest, pass in place of interest into body
+- `/api/stamp/submitStamp` - POST submit a stamp, pass in name, location, and place of interest into body; Note this is the most test needy of the requests, so dk if works properly
+
+- `/api/poi/` - GET all points of interest
+- `/api/poi/getByUser` - GET all points of interest by user, pass in name into body
+  
+- `/api/location/` - GET all points of interest
+- `/api/location/getByUser` - GET all points of interest by user, pass in name into body
+
+- `/api/challenge/` - GET all challenges
+- `/api/challenge/getByPOI` - GET all challenges by place of interest, pass in place of interest into body
