@@ -15,7 +15,7 @@ export async function getStampsByUserName(userName: string) {
     const stamps = await db.all(
         `SELECT stamps.* 
          FROM stamps 
-         JOIN users ON stamps.user_id = users.id 
+         JOIN users ON stamps.user_name = users.name
          WHERE users.name = ?`,
         userName
     );
@@ -29,7 +29,7 @@ export async function getStampsByLocationName(locationName: string) {
     const stamps = await db.all(
         `SELECT stamps.* 
          FROM stamps 
-         JOIN locations ON stamps.location_id = locations.id 
+         JOIN locations ON stamps.location_name = locations.name 
          WHERE locations.name = ?`,
         locationName
     );
@@ -43,8 +43,8 @@ export async function getStampsByPoiName(poiName: string) {
     const stamps = await db.all(
         `SELECT stamps.* 
          FROM stamps 
-         JOIN points_of_interest ON stamps.poi_id = points_of_interest.id 
-         WHERE points_of_interest.name = ?`,
+         JOIN point_of_interests ON stamps.point_of_interest_name = point_of_interests.name
+         WHERE point_of_interests.name = ?`,
         poiName
     );
     await db.close();

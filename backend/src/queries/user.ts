@@ -21,9 +21,11 @@ export async function createUser(name: string) {
     const db = await getDbConnection();
 
     try {
-        const user = await db.run('INSERT INTO users (name) VALUES (?)', name);
+        await db.run('INSERT INTO users (name) VALUES (?)', name);
+        const newUser = await db.get('SELECT * FROM users WHERE name = ?', name);
         await db.close();
-        return user;
+
+        return newUser;
     } catch (error: any) {
         await db.close();
         if (error.code === 'SQLITE_CONSTRAINT') {

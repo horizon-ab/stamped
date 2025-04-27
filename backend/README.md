@@ -15,3 +15,4 @@ To initialize the database, run the following command: `npm run db:init`
 Make sure you have ts-node installed globally. You can install it by running `npm install -g ts-node`.
 
 ### API End Points Usage
+All data in routers, stamp is the only confusing one, the rest are straight forward basic get requests

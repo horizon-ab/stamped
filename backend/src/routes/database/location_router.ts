@@ -13,7 +13,12 @@ router.get('/getByUser', async (req: Request, res: Response) => {
     
     try {
         const location = await getLocationByUserStamps(name);
-        res.status(200).json(location);
+        if (location.length === 0) {
+            res.status(404).json({ error: 'No locations found for this user' });
+            return;
+        } else {
+            res.status(200).json(location);
+        }
     } catch (error) {
         console.error('Error fetching location by user:', error);
         res.status(500).json({ error: error });

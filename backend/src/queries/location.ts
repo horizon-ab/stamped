@@ -22,8 +22,8 @@ export async function getLocationByUserStamps(userName: string) {
     const location = await db.all(
         `SELECT locations.* 
          FROM locations 
-         JOIN stamps ON locations.id = stamps.location_id 
-         JOIN users ON stamps.user_id = users.id 
+         JOIN stamps ON locations.name = stamps.location_name
+         JOIN users ON stamps.user_name = users.name 
          WHERE users.name = ?`,
         userName
     );

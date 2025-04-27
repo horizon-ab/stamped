@@ -4,7 +4,7 @@ import { getDbConnection } from '../db/db_util';
 export async function getPointOfInterests() {
     const db = await getDbConnection();
 
-    const pointOfInterests = await db.all('SELECT * FROM point_of_interest');
+    const pointOfInterests = await db.all('SELECT * FROM point_of_interests');
     await db.close();
     return pointOfInterests;
 }
@@ -12,7 +12,7 @@ export async function getPointOfInterests() {
 export async function getPointOfInterestByName(name: string) {
     const db = await getDbConnection();
 
-    const pointOfInterest = await db.get('SELECT * FROM point_of_interest WHERE name = ?', name);
+    const pointOfInterest = await db.get('SELECT * FROM point_of_interests WHERE name = ?', name);
     await db.close();
     return pointOfInterest;
 }
@@ -20,10 +20,10 @@ export async function getPointOfInterestByName(name: string) {
 export async function getPointOfInterestByUserStamps(userName: string) {
     const db = await getDbConnection();
     const pointOfInterests = await db.all(
-        `SELECT point_of_interest.* 
-         FROM point_of_interest 
-         JOIN stamps ON point_of_interest.id = stamps.point_of_interest_id 
-         JOIN users ON stamps.user_id = users.id 
+        `SELECT point_of_interests.* 
+         FROM point_of_interests 
+         JOIN stamps ON point_of_interests.name = stamps.point_of_interest_name 
+         JOIN users ON stamps.user_name = users.name 
          WHERE users.name = ?`,
         userName
     );

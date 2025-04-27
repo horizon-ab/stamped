@@ -27,7 +27,7 @@ router.post('/sign-in', async (req: Request, res: Response) => {
     const user = await getUserByName(name);
     
     if (user) {
-        res.json(user);
+        res.status(200).json(user);
     } else {
         // create a new user
         const newUser = await createUser(name);
