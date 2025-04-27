@@ -7,7 +7,7 @@ import poiRouter from './routes/database/point_of_interest_router';
 import challengeRouter from './routes/database/challenge_router';
 
 const app = express();
-const port = 5000;
+const port = 80;
 
 app.use(express.json());
 
