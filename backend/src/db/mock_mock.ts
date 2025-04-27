@@ -41,6 +41,8 @@ const generateMockData = async () => {
   const pointsOfInterestData = [
     { location_name: 'UCLA', name: "Pauley Pavilion", description: "Huge Stadium fit for hosting hackathons", latitude: 34.070211, longitude: -118.446775 },
     { location_name: 'UCLA', name: "Bruin Bear", description: "Iconic statue on campus", latitude: 34.0747, longitude: -118.4441 },
+    { location_name: 'UCLA', name: "Powell Library", description: "Where most students actually live on campus", latitude : 34.0716443, longitude : -118.4447515 },
+    { location_name: 'UCLA', name: "Inverted Fountain", description: "Water doesn't actually fall up here.", latitude: 34.0700809, longitude: -118.4433377 },
     { location_name: 'Santa Monica', name: "Santa Monica Pier", description: "Iconic pier with amusement park rides", latitude: 34.0097, longitude: -118.4976 },
     { location_name: 'Santa Monica', name: "Third Street Promenade", description: "Pedestrian mall with shops and restaurants", latitude: 34.0158, longitude: -118.4987 },
     { location_name: 'Hollywood', name: "Walk of Fame", description: "Stars embedded in the sidewalks", latitude: 34.1016, longitude: -118.3416 },
@@ -64,7 +66,9 @@ const generateMockData = async () => {
   // Insert sample challenges
   const challengesData = [
     { poi_name: 'Pauley Pavilion', name: 'Hackathon', description: 'Code for LA Hacks 2025!' },
-    { poi_name: 'Bruin Bear', name: 'Take a Selfie', description: 'Snap a photo with the Bruin Bear.' },
+    { poi_name: 'Bruin Bear', name: 'Beary Nice', description: 'Make a bear pose with the bear.' },
+    { poi_name: 'Powell Library', name: 'Midnight Escapades', description: 'Study in the library any time from 12:00 AM to 6 AM.' },
+    { poi_name: 'Inverted Fountain', name: 'On your Toes', description: 'Get as close to the inverted fountain as possible without touching it.' },
     { poi_name: 'Santa Monica Pier', name: 'Ferris Wheel Ride', description: 'Enjoy the ocean view from the Ferris wheel.' },
     { poi_name: 'Third Street Promenade', name: 'Street Performer Sighting', description: 'Watch a street performer on the Promenade.' },
     { poi_name: 'Walk of Fame', name: 'Find Your Star', description: 'Locate your favorite celebrity\'s star.' },
