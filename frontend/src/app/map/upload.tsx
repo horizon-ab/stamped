@@ -15,6 +15,7 @@ import type { POI } from './map_display'
 const Upload = (props: { poi: POI }) => {
   const [challenge, setChallenge] = useState('');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // State to control dialog visibility
 
   // Fetch challenge data when the component mounts
   useEffect(() => {
@@ -52,9 +53,15 @@ const Upload = (props: { poi: POI }) => {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: any) => {
     console.log("Upload called!");
     event.preventDefault();
+
+    const user = localStorage.getItem("stamped-username");
+    if (!user) {
+      alert("Please log in to submit a stamp.");
+      return;
+    }
 
     if (!selectedImage) {
       alert("Please select an image before submitting.");
@@ -63,7 +70,7 @@ const Upload = (props: { poi: POI }) => {
 
     const formData = new FormData();
     formData.append('image', selectedImage);
-    formData.append('userName', 'Alice'); // TODO: replace with local storage user name
+    formData.append('userName', user);
     formData.append('poiName', props.poi.name);
 
     try {
@@ -75,6 +82,13 @@ const Upload = (props: { poi: POI }) => {
       if (response.ok) {
         const result = await response.json();
         alert("Successful Submission!");
+        setIsDialogOpen(false); // Close the dialog after successful submission
+      } else if (response.status === 406) {
+        const error = await response.json();
+        alert("Submission out of bounds");
+      } else if (response.status === 408) {
+        const error = await response.json();
+        alert("Challenge verification failed");
       } else {
         const error = await response.json();
         alert("Failed Submission...");
@@ -85,9 +99,9 @@ const Upload = (props: { poi: POI }) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Challenge</Button>
+        <Button variant="outline" onClick={() => setIsDialogOpen(true)}>Challenge</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
