@@ -31,6 +31,19 @@ export async function getLocationByUserStamps(userName: string) {
     return location;
 }
 
+export async function getLocationByPoiName(poiName: string) {
+    const db = await getDbConnection();
+    const location = await db.all(
+        `SELECT locations.* 
+         FROM locations 
+         JOIN points_of_interest ON locations.id = points_of_interest.location_id 
+         WHERE points_of_interest.name = ?`,
+        poiName
+    );
+    await db.close();
+    return location;
+}
+
 export async function createLocation(name: string, description: string, latitude: number, longitude: number) {
     const db = await getDbConnection();
 

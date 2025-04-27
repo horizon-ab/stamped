@@ -9,6 +9,14 @@ export async function getPointOfInterests() {
     return pointOfInterests;
 }
 
+export async function getPointOfInterestByName(name: string) {
+    const db = await getDbConnection();
+
+    const pointOfInterest = await db.get('SELECT * FROM point_of_interest WHERE name = ?', name);
+    await db.close();
+    return pointOfInterest;
+}
+
 export async function getPointOfInterestByUserStamps(userName: string) {
     const db = await getDbConnection();
     const pointOfInterests = await db.all(
