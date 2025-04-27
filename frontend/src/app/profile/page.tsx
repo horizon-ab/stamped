@@ -38,9 +38,16 @@ const sampleStamps = [
 ];
 
 const Profile: React.FC = () => {
+  const [username, setUsername] = useState("Guest")
   // Mock user schema tbm
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("stamped-username");
+      if (stored) setUsername(stored);
+    }
+  }, []);
   const user = {
-    name: "f''''(x) Traveler",
+    name: username,
     avatar: ProfileGenerator.randomAvatar(),
     bio: ProfileGenerator.randomBio(),
     stampsCollected: sampleStamps.length,
